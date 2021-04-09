@@ -2,7 +2,7 @@
 # Maintainer: Benjamin Abendroth <braph93@gmx.de>
 
 pkgname=nbfc-linux-git
-pkgver=0.0.0
+pkgver=0.0.1
 pkgrel=1
 pkgdesc="Lightweight C port of NoteBook FanControl (no Mono required)"
 arch=('i686' 'x86_64')
