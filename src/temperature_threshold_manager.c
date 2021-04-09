@@ -10,7 +10,7 @@ Error* ThresholdManager_Init(ThresholdManager* self, array_of(TemperatureThresho
       TemperatureThreshold* a = &thresholds->data[j];
       TemperatureThreshold* b = &thresholds->data[j+1];
       if (a->UpThreshold > b->UpThreshold) {
-        TemperatureThreshold swap = *a;
+        const TemperatureThreshold swap = *a;
         *a = *b;
         *b = swap;
       }

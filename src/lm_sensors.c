@@ -4,16 +4,17 @@
 #include "error.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <sensors/error.h>
 #include <sensors/sensors.h>
 
 static const sensors_chip_name* LM_Sensors_ChipName;
 static Error* LM_Sensors_Error;
 
-static Error* err_sensors(Error* e, int code, const char* message) {
+static Error* err_sensors(Error* e, const int code, const char* message) {
   e = err_allocate(e);
   e->system = ErrorSystem_Sensors;
-  e->code = code;
+  e->value.code = code;
   if (message)
     return err_string(e, message);
   return e;
@@ -45,7 +46,7 @@ Error* LM_Sensors_Init(FILE* fh) {
   sensors_parse_error_wfn = LM_Sensors_parse_error_wfn;
 
   LM_Sensors_Error = NULL;
-  int err = sensors_init(fh);
+  const int err = sensors_init(fh);
   if (LM_Sensors_Error)
     return LM_Sensors_Error;
   if (err)

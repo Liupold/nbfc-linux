@@ -182,8 +182,6 @@ def generate_printf_usage(p, macro=None, prog='%s'):
             sub.parser.prog = name
             generate_printf_usage(sub, None, '%s '+name)
 
-Parser2Md = generate_markdown
-
 def find_ArgumentParser(module):
     for v in dir(module):
         if isinstance(getattr(module, v), argparse.ArgumentParser):

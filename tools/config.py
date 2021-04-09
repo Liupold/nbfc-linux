@@ -108,10 +108,10 @@ with open(find_config_json(), 'r') as fh:
 
     for struct_name, fields in structs.items():
         new_fields = []
-        help_ = fields.pop('help_', None)
+        _help = fields.pop('_help', None)
         for field_name, field in fields.items():
             new_fields.append(FieldDefinition(field_name, field['type'], **field))
-        structs[struct_name] = StructDefinition(struct_name, new_fields, help=help_)
+        structs[struct_name] = StructDefinition(struct_name, new_fields, help=_help)
 
 # =============================================================================
 # XML Parsing

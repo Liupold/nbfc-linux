@@ -6,19 +6,19 @@
 #include <string.h>
 #include <limits.h> // PATH_MAX
 
-static const char* LinuxHwmonDirs[] = {
+static const char* const LinuxHwmonDirs[] = {
   "/sys/class/hwmon/hwmon%d",
   "/sys/class/hwmon/hwmon%d/device",
   NULL
 };
 
-static const char* LinuxTempSensorNames[] = {
+static const char* const LinuxTempSensorNames[] = {
   "coretemp",
   "k10temp",
   NULL
 };
 
-static const char* LinuxTempSensorFile = "temp%d_input";
+static const char* const LinuxTempSensorFile = "temp%d_input";
 
 typedef struct FS_TemperatureSource FS_TemperatureSource;
 struct FS_TemperatureSource {
@@ -32,7 +32,7 @@ static array_of(FS_TemperatureSource) FS_Sensors_Sources;
 
 static Error* FS_TemperatureSource_GetTemperature(FS_TemperatureSource* self, float* out) {
   char buf[32];
-  int nread = slurp_file(buf, sizeof(buf), my.file);
+  int nread = slurp_file(buf, sizeof(buf) - 1, my.file);
   if (nread < 0)  return err_stdlib(0, my.file);
   if (nread == 0) return (errno = EINVAL), err_stdlib(0, my.file);
 
@@ -76,7 +76,7 @@ Error* FS_Sensors_Init() {
   FS_TemperatureSource *const sources_end = &sources[32];
   int n_sources;
 
-  for (const char** hwmonDir = LinuxHwmonDirs; *hwmonDir; ++hwmonDir) {
+  for (const char* const* hwmonDir = LinuxHwmonDirs; *hwmonDir; ++hwmonDir) {
     for (int i = 0; i < 10; i++) {
       snprintf(dir,  sizeof(dir), *hwmonDir, i);
       snprintf(file, sizeof(file), "%s/%s", dir, "name");
@@ -94,7 +94,7 @@ Error* FS_Sensors_Init() {
       while (nread && sourceName[nread] < 32)
         sourceName[nread--] = '\0'; /* strip whitespace */
 
-      for (const char** n = LinuxTempSensorNames; *n; ++n) {
+      for (const char* const* n = LinuxTempSensorNames; *n; ++n) {
         if (strcmp(sourceName, *n))
           continue;
 

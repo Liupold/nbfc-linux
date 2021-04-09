@@ -24,7 +24,7 @@ nbfc_service-debug: \
 	temperature_filter.c temperature_filter.h \
 	temperature_threshold_manager.c temperature_threshold_manager.h \
 	optparse/optparse.h optparse/optparse.c
-	$(CC) $(CFLAGS) -Wall -Wextra -Wfatal-errors -Wpedantic -Og -g build.c -lsensors -lm -o nbfc_service-debug
+	$(CC) $(CFLAGS) -DHAVE_SENSORS -Wall -Wextra -Wfatal-errors -Wpedantic -Og -g build.c -lsensors -lm -o nbfc_service-debug
 
 nbfc_service: \
 	build.c \
@@ -52,7 +52,7 @@ nbfc_service: \
 	temperature_filter.c temperature_filter.h \
 	temperature_threshold_manager.c temperature_threshold_manager.h \
 	optparse/optparse.h optparse/optparse.c
-	$(CC) $(CFLAGS) -Wall -Wextra -Os -DNDEBUG -s build.c -lsensors -lm -o nbfc_service
+	$(CC) $(CFLAGS) -DHAVE_SENSORS -Wall -Wextra -Os -DNDEBUG -s build.c -lsensors -lm -o nbfc_service
 
 ec_probe-debug: \
 	ec_probe.c \

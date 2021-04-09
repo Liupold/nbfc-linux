@@ -31,15 +31,18 @@ void Info_Close() {
 
 Error* Info_Write(Config* cfg, float temperature, bool readonly, array_of(Fan)* fans) {
   static const char Bool_ToStr[2][6] = {"false","true"};
+  const pid_t pid = getpid();
   char buf[256];
   char result[4096];
   StringBuf  S = {result, 0, sizeof(result) - 1};
   StringBuf* s = &S;
 
   int fd = open(NBFC_PID_FILE, O_CREAT|O_WRONLY|O_TRUNC, S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
-  snprintf(buf, sizeof(buf), "%d", getpid());
-  write(fd, buf, strlen(buf));
-  close(fd);
+  if (fd >= 0) {
+    const int len = snprintf(buf, sizeof(buf), "%d", pid);
+    write(fd, buf, len);
+    close(fd);
+  }
 
   StringBuf_Printf(s, "{\n"
     "\t\"pid\":         %d,\n"
@@ -47,7 +50,7 @@ Error* Info_Write(Config* cfg, float temperature, bool readonly, array_of(Fan)* 
     "\t\"readonly\":    %s,\n"
     "\t\"temperature\": %.2f,\n"
     "\t\"fans\": [\n",
-    getpid(),
+    pid,
     Json_EscapeString(buf, sizeof(buf), cfg->NotebookModel),
     Bool_ToStr[readonly],
     temperature);

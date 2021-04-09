@@ -33,7 +33,7 @@ Error* Fan_Init(Fan* self, FanConfiguration* cfg, int criticalTemperature, bool 
 // PRIVATE
 // ============================================================================
 
-static inline int float_eq(float a, float b) {
+static inline int float_eq(const float a, const float b) {
   return fabs(a - b) < 0.06; /* ~ 0.05 */
 }
 
@@ -169,8 +169,8 @@ Error* Fan_ECReset(Fan* self) {
 }
 
 Error* Fan_ECFlush(Fan* self) {
-  float targetSpeed = Fan_GetTargetSpeed(self);
-  int value = Fan_PercentageToFanSpeed(self, targetSpeed);
+  const float speed = Fan_GetTargetSpeed(self);
+  const int   value = Fan_PercentageToFanSpeed(self, speed);
   return Fan_ECWriteValue(self, value);
 }
 

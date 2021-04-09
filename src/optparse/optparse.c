@@ -67,6 +67,7 @@ void cli99_Init(cli99* self, int argc, char* const argv[], const cli99_option* o
   my.argv    = (const char**) argv;
   my.flags   = flags;
   my._state  = cli99_state_uninitialized;
+  my._options_size = 0;
   cli99_SetOptions(self, options, true);
 }
 

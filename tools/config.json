@@ -1,6 +1,7 @@
 {
   "TemperatureThreshold": {
-    "help_": "Defines how fast the fan runs at different temperatures",
+    "_help": "Defines how fast the fan runs at different temperatures",
+
     "UpThreshold": {
       "type": "short",
       "help": "NBFC will select the next upper threshold as soon as the temperature exceeds *UpThreshold*. in celsius"
@@ -18,7 +19,8 @@
 
 
   "FanSpeedPercentageOverride": {
-    "help_": "Overrides the default algorithm to calculate fan speeds",
+    "_help": "Overrides the default algorithm to calculate fan speeds",
+
     "FanSpeedPercentage": {
       "type": "float",
       "valid": "parameter >= 0.0 && parameter <= 100.0",
@@ -37,7 +39,8 @@
 
 
   "RegisterWriteConfiguration": {
-    "help_": "Allows to write to any EC register",
+    "_help": "Allows to write to any EC register",
+
     "WriteMode": {
       "type": "RegisterWriteMode",
       "default": "RegisterWriteMode_Set",
@@ -80,7 +83,8 @@
 
 
   "FanConfiguration": {
-    "help_": "Defines how NBFC controls a fan",
+    "_help": "Defines how NBFC controls a fan",
+
     "FanDisplayName": {
       "type": "const char*",
       "default": "\"\"",
@@ -144,7 +148,8 @@
 
 
   "Config": {
-    "help_": "",
+    "_help": "",
+
     "NotebookModel": {
       "type": "const char*",
       "help": "The Notebook Model as described in your BIOS. See `sudo dmidecode -s system-product-name`."
@@ -192,7 +197,7 @@
   },
 
   "ServiceConfig": {
-    "help_": "Main configuration file",
+    "_help": "Main configuration file of nbfc_service",
 
     "SelectedConfigId": {
       "type": "const char*",
