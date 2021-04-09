@@ -1,0 +1,142 @@
+#!/bin/bash
+
+_nbfc() {
+  COMPREPLY=();
+  local arg0=${COMP_WORDS[1]}
+  case "$arg0" in
+    start) _nbfc_start;;
+    stop) _nbfc_stop;;
+    restart) _nbfc_restart;;
+    status) _nbfc_status;;
+    config) _nbfc_config;;
+    set) _nbfc_set;;
+    help) _nbfc_help;;
+    *) COMPREPLY+=($(compgen -W 'start stop restart status config set help' -- $cur));;
+  esac
+
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+
+  case "$prev" in
+    -h) ;& --help)
+      COMPREPLY+=();;
+  esac
+
+  COMPREPLY+=($(compgen -W '-h --help' -- $cur))
+}
+
+_nbfc_start() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+
+  case "$prev" in
+    -h) ;& --help)
+      COMPREPLY+=();;
+    -e) ;& --enabled)
+      COMPREPLY+=();;
+    -r) ;& --readonly)
+      COMPREPLY+=();;
+  esac
+
+  COMPREPLY+=($(compgen -W '-h --help -e --enabled -r --readonly' -- $cur))
+}
+
+_nbfc_stop() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+
+  case "$prev" in
+    -h) ;& --help)
+      COMPREPLY+=();;
+  esac
+
+  COMPREPLY+=($(compgen -W '-h --help' -- $cur))
+}
+
+_nbfc_restart() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+
+  case "$prev" in
+    -h) ;& --help)
+      COMPREPLY+=();;
+    -e) ;& --enabled)
+      COMPREPLY+=();;
+    -r) ;& --readonly)
+      COMPREPLY+=();;
+  esac
+
+  COMPREPLY+=($(compgen -W '-h --help -e --enabled -r --readonly' -- $cur))
+}
+
+_nbfc_status() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+
+  case "$prev" in
+    -h) ;& --help)
+      COMPREPLY+=();;
+    -a) ;& --all)
+      COMPREPLY+=();;
+    -s) ;& --service)
+      COMPREPLY+=();;
+    -f) ;& --fan)
+      COMPREPLY+=($(compgen -W "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 '...'" -- $cur));;
+    -w) ;& --watch)
+      COMPREPLY+=($(compgen -f -- $cur));;
+  esac
+
+  COMPREPLY+=($(compgen -W '-h --help -a --all -s --service -f --fan -w --watch' -- $cur))
+}
+
+_nbfc_config() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+
+  case "$prev" in
+    -h) ;& --help)
+      COMPREPLY+=();;
+    -l) ;& --list)
+      COMPREPLY+=();;
+    -s) ;& --set)
+      COMPREPLY+=($(compgen -f -- $cur));;
+    -a) ;& --apply)
+      COMPREPLY+=($(compgen -f -- $cur));;
+    -r) ;& --recommend)
+      COMPREPLY+=();;
+  esac
+
+  COMPREPLY+=($(compgen -W '-h --help -l --list -s --set -a --apply -r --recommend' -- $cur))
+}
+
+_nbfc_set() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+
+  case "$prev" in
+    -h) ;& --help)
+      COMPREPLY+=();;
+    -a) ;& --auto)
+      COMPREPLY+=();;
+    -s) ;& --speed)
+      COMPREPLY+=($(compgen -f -- $cur));;
+    -f) ;& --fan)
+      COMPREPLY+=($(compgen -W "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 '...'" -- $cur));;
+  esac
+
+  COMPREPLY+=($(compgen -W '-h --help -a --auto -s --speed -f --fan' -- $cur))
+}
+
+_nbfc_help() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+
+  case "$prev" in
+    -h) ;& --help)
+      COMPREPLY+=();;
+  esac
+
+  COMPREPLY+=($(compgen -W '-h --help' -- $cur))
+}
+
+complete -F _nbfc nbfc

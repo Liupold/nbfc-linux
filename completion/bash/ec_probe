@@ -1,0 +1,85 @@
+#!/bin/bash
+
+_ec_probe() {
+  COMPREPLY=();
+  local arg0=${COMP_WORDS[1]}
+  case "$arg0" in
+    dump) _ec_probe_dump;;
+    read) _ec_probe_read;;
+    write) _ec_probe_write;;
+    monitor) _ec_probe_monitor;;
+    *) COMPREPLY+=($(compgen -W 'dump read write monitor' -- $cur));;
+  esac
+
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+
+  case "$prev" in
+    -h) ;& --help)
+      COMPREPLY+=();;
+    -e) ;& --embedded-controller)
+      COMPREPLY+=($(compgen -W 'ec_linux ec_sys_linux' -- $cur));;
+  esac
+
+  COMPREPLY+=($(compgen -W '-h --help -e --embedded-controller' -- $cur))
+}
+
+_ec_probe_dump() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+
+  case "$prev" in
+    -h) ;& --help)
+      COMPREPLY+=();;
+  esac
+
+  COMPREPLY+=($(compgen -W '-h --help' -- $cur))
+}
+
+_ec_probe_read() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+
+  case "$prev" in
+    -h) ;& --help)
+      COMPREPLY+=();;
+  esac
+
+  COMPREPLY+=($(compgen -W '-h --help' -- $cur))
+}
+
+_ec_probe_write() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+
+  case "$prev" in
+    -h) ;& --help)
+      COMPREPLY+=();;
+  esac
+
+  COMPREPLY+=($(compgen -W '-h --help' -- $cur))
+}
+
+_ec_probe_monitor() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+
+  case "$prev" in
+    -h) ;& --help)
+      COMPREPLY+=();;
+    -i) ;& --interval)
+      COMPREPLY+=($(compgen -W "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 '...'" -- $cur));;
+    -t) ;& --timespan)
+      COMPREPLY+=($(compgen -W "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 '...'" -- $cur));;
+    -r) ;& --report)
+      COMPREPLY+=($(compgen -f -- $cur));;
+    -c) ;& --clearly)
+      COMPREPLY+=();;
+    -d) ;& --decimal)
+      COMPREPLY+=();;
+  esac
+
+  COMPREPLY+=($(compgen -W '-h --help -i --interval -t --timespan -r --report -c --clearly -d --decimal' -- $cur))
+}
+
+complete -F _ec_probe ec_probe

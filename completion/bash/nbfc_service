@@ -1,0 +1,28 @@
+#!/bin/bash
+
+_nbfc_service() {
+  COMPREPLY=();
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+
+  case "$prev" in
+    -h) ;& --help)
+      COMPREPLY+=();;
+    -r) ;& --readonly)
+      COMPREPLY+=();;
+    -f) ;& --fork)
+      COMPREPLY+=();;
+    -d) ;& --debug)
+      COMPREPLY+=();;
+    -c) ;& --config-file)
+      COMPREPLY+=($(compgen -f -- $cur));;
+    -s) ;& --state-file)
+      COMPREPLY+=($(compgen -f -- $cur));;
+    -e) ;& --embedded-controller)
+      COMPREPLY+=($(compgen -W 'dummy ec_linux ec_sys_linux' -- $cur));;
+  esac
+
+  COMPREPLY+=($(compgen -W '-h --help -r --readonly -f --fork -d --debug -c --config-file -s --state-file -e --embedded-controller' -- $cur))
+}
+
+complete -F _nbfc_service nbfc_service
