@@ -1,7 +1,7 @@
 #!/usr/bin/python3 -B
 
 import argparse, re
-import zsh, bash
+import zsh, bash, fish
 
 # =============================================================================
 # Utils =======================================================================
@@ -219,6 +219,7 @@ if __name__ == '__main__':
     RemoveHelpActions(p)
 
     if   action == 'bash':     bash.generate_completion(p)
+    elif action == 'fish':     fish.generate_completion(p)
     elif action == 'zsh':      zsh.generate_completion(p)
     elif action == 'printf':   generate_printf_usage(p)
     elif action == 'markdown':

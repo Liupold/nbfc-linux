@@ -2,6 +2,7 @@ build: \
 	etc/nbfc/configs \
 	completion/zsh/_ec_probe completion/zsh/_nbfc completion/zsh/_nbfc_service \
 	completion/bash/ec_probe completion/bash/nbfc completion/bash/nbfc_service \
+	completion/fish/ec_probe.fish completion/fish/nbfc.fish completion/fish/nbfc_service.fish \
 	ec_probe.md nbfc.md nbfc_service.md nbfc_service.json.md \
 	doc/ec_probe.1 doc/nbfc.1 doc/nbfc_service.json.5 doc/nbfc_service.1 \
 	src/nbfc_service src/ec_probe
@@ -30,13 +31,17 @@ install: build
 	
 	# Completion
 	mkdir -p $(DESTDIR)/usr/share/zsh/site-functions
-	cp completion/zsh/_nbfc          $(DESTDIR)/usr/share/zsh/site-functions/
-	cp completion/zsh/_nbfc_service  $(DESTDIR)/usr/share/zsh/site-functions/
-	cp completion/zsh/_ec_probe      $(DESTDIR)/usr/share/zsh/site-functions/
+	cp completion/zsh/_nbfc                $(DESTDIR)/usr/share/zsh/site-functions/
+	cp completion/zsh/_nbfc_service        $(DESTDIR)/usr/share/zsh/site-functions/
+	cp completion/zsh/_ec_probe            $(DESTDIR)/usr/share/zsh/site-functions/
 	mkdir -p $(DESTDIR)/usr/share/bash-completion/completions
-	cp completion/bash/nbfc          $(DESTDIR)/usr/share/bash-completion/completions/
-	cp completion/bash/nbfc_service  $(DESTDIR)/usr/share/bash-completion/completions/
-	cp completion/bash/ec_probe      $(DESTDIR)/usr/share/bash-completion/completions/
+	cp completion/bash/nbfc                $(DESTDIR)/usr/share/bash-completion/completions/
+	cp completion/bash/nbfc_service        $(DESTDIR)/usr/share/bash-completion/completions/
+	cp completion/bash/ec_probe            $(DESTDIR)/usr/share/bash-completion/completions/
+	mkdir -p $(DESTDIR)/usr/share/fish/completions
+	cp completion/fish/nbfc.fish           $(DESTDIR)/usr/share/fish/completions/
+	cp completion/fish/nbfc_service.fish   $(DESTDIR)/usr/share/fish/completions/
+	cp completion/fish/ec_probe.fish       $(DESTDIR)/usr/share/fish/completions/
 
 clean:
 	rm -rf __pycache__ tools/argany/__pycache__
@@ -74,6 +79,9 @@ etc/nbfc/configs:
 completion/bash/:
 	mkdir -p completion/bash
 
+completion/fish/:
+	mkdir -p completion/fish
+
 completion/zsh/:
 	mkdir -p completion/zsh
 
@@ -94,6 +102,15 @@ completion/bash/nbfc_service: completion/bash/
 
 completion/bash/ec_probe: completion/bash/
 	./tools/argany/argany.py bash ./tools/argany/ec_probe.py > completion/bash/ec_probe
+
+completion/fish/nbfc.fish: completion/fish/
+	./tools/argany/argany.py fish ./nbfc.py > completion/fish/nbfc.fish
+
+completion/fish/nbfc_service.fish: completion/fish/
+	./tools/argany/argany.py fish ./tools/argany/nbfc_service.py > completion/fish/nbfc_service.fish
+
+completion/fish/ec_probe.fish: completion/fish/
+	./tools/argany/argany.py fish ./tools/argany/ec_probe.py > completion/fish/ec_probe.fish
 
 # =============================================================================
 # Markdown ====================================================================

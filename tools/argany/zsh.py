@@ -1,9 +1,8 @@
 #!/usr/bin/python3 -B
 
-import argparse # TODO...
-from shell import *
+import shell
 
-class ZshCompleter(ShellCompleter):
+class ZshCompleter(shell.ShellCompleter):
     def none(self):
         return "'()'"
 
@@ -11,7 +10,7 @@ class ZshCompleter(ShellCompleter):
         if not glob_pattern:
             return '_files'
         else:
-            return escape('_files -G '+glob_pattern)
+            return shell.escape('_files -G '+glob_pattern)
 
     def users(self):
         return '_users'
@@ -26,7 +25,7 @@ class ZshCompleter(ShellCompleter):
         return '_hostnames'
 
     def choices(self, choices):
-        return escape("(%s)" % (' '.join(escape(str(c)) for c in choices)))
+        return shell.escape("(%s)" % (' '.join(shell.escape(str(c)) for c in choices)))
 
 _zsh_complete = ZshCompleter().complete
 
@@ -35,13 +34,13 @@ def _zsh_complete_action(action):
         return "'(%s)'{%s}%s:%s:%s" % (
             _zsh_get_optstrings(action),
             _zsh_get_optstrings_with_brace_expansion(action),
-            escape('[%s]' % action.help),
-            escape(action.metavar if action.metavar else ''),
-            _zsh_complete(*action_get_completer(action)))
+            shell.escape('[%s]' % action.help),
+            shell.escape(action.metavar if action.metavar else ''),
+            _zsh_complete(*shell.action_get_completer(action)))
     else:
         return ":%s:%s" % (
-            escape(action.help),
-            _zsh_complete(*action_get_completer(action)))
+            shell.escape(action.help),
+            _zsh_complete(*shell.action_get_completer(action)))
 
 def _zsh_get_optstrings(action):
     return ' '.join(action.option_strings)
@@ -52,15 +51,8 @@ def _zsh_get_optstrings_with_brace_expansion(action):
     else:
         return ','.join(action.option_strings)
 
-def get_help(o):
-    if isinstance(o, argparse.ArgumentParser):
-        try:    return getattr(o, 'help')
-        except: return o.description
-    else: return get_help(o.parser)
-    #if isinstance(o, Parser): return get_help(o.parser)
-
 def _zsh_generate_subcommands_complete(p, funcname):
-    commands = '\n    '.join(f"'{name}:{get_help(sub)}'" for name, sub in p.subparsers.items())
+    commands = '\n    '.join(f"'{name}:{shell.get_help(sub)}'" for name, sub in p.subparsers.items())
 
     return f'''\
 {funcname}() {{
@@ -89,7 +81,7 @@ def _zsh_generate_parser_func(p, funcname):
         r += '    (args)\n'
         r += '      case $line[1] in\n'
         for name in p.subparsers:
-            f = make_identifier(f'_{funcname}_{name}')
+            f = shell.make_identifier(f'_{funcname}_{name}')
             PS += _zsh_generate_parser_func(p.subparsers[name], f)
             r += f'        ({name}) {f};;\n'
         r += '      esac\n'

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import sys, re
+import sys, re, argparse
 
 def make_identifier(s):
     ''' Make `s` a valid shell identifier '''
@@ -19,9 +19,19 @@ def escape(s):
     if '"' not in s: return '"%s"' % s.replace('\\', '\\\\').replace('"', '\\"')
     return "'%s'" % s.replace("'", '\'"\'"\'')
 
+def get_help(o):
+    if isinstance(o, argparse.ArgumentParser):
+        try:    return getattr(o, 'help')
+        except: return o.description
+    else: return get_help(o.parser)
+
 def action_takes_args(action):
     try:    return action.nargs in '?+*'
     except: return action.nargs != 0
+
+def action_requires_args(action):
+    try:    return action.nargs in '+'
+    except: return bool(action.nargs)
 
 def action_get_completer(action):
     if hasattr(action, 'complete'):

@@ -9,7 +9,7 @@ nbfc\_service.json - Notebook FanControl service configuration
 ServiceConfig
 -------------
 
-Main configuration file
+Main configuration file of nbfc_service
 
 `"SelectedConfigId"`: *const char\**
   The selected config model. This equals the basename of a notebook model configuration file.

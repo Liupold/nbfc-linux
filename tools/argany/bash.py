@@ -1,13 +1,13 @@
 #!/usr/bin/python3 -B
 
-from shell import *
+import shell
 
-class BashCompleter(ShellCompleter):
+class BashCompleter(shell.ShellCompleter):
     def files(self, glob_pattern=None):
         if not glob_pattern:
             return '$(compgen -f -- $cur)'
         else:
-            return '$(compgen -G %s -- $cur)' % escape(glob_pattern)
+            return '$(compgen -G %s -- $cur)' % shell.escape(glob_pattern)
 
     def users(self):
         return '$(compgen -A user -- $cur)'
@@ -23,19 +23,19 @@ class BashCompleter(ShellCompleter):
 
     def choices(self, choices):
         return '$(compgen -W %s -- $cur)' % (
-            escape(' '.join(escape(str(c)) for c in choices)))
+            shell.escape(' '.join(shell.escape(str(c)) for c in choices)))
 
 _bash_complete = BashCompleter().complete
 
 def _bash_complete_action(action):
     r = ''
     if action.option_strings:
-        r += '    %s)\n' % ') ;& '.join(map(escape, action.option_strings))
-        r += '      COMPREPLY+=(%s);;\n' % _bash_complete(*action_get_completer(action))
+        r += '    %s)\n' % ') ;& '.join(map(shell.escape, action.option_strings))
+        r += '      COMPREPLY+=(%s);;\n' % _bash_complete(*shell.action_get_completer(action))
     return r
 
 def _bash_complete_parser(p, funcname, root_parser=True):
-    funcname = make_identifier(funcname)
+    funcname = shell.make_identifier(funcname)
 
     r  = f'{funcname}() {{\n'
     if root_parser:
@@ -60,7 +60,7 @@ def _bash_complete_subcommand(p):
     r  = '  local arg0=${COMP_WORDS[1]}\n'
     r += '  case "$arg0" in\n'
     for name, subparser in p.subparsers.items():
-        funcname = make_identifier('_%s_%s' % (p.parser.prog, name))
+        funcname = shell.make_identifier('_%s_%s' % (p.parser.prog, name))
         r += f'    {name}) {funcname};;\n'
     r += '    *) COMPREPLY+=(%s);;\n' % _bash_complete('choices', p.subparsers.keys())
     r += '  esac\n\n'
