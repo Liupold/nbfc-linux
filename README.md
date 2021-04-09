@@ -5,10 +5,10 @@ This is a C port of [Stefan Hirschmann's](https://github.com/hirschmann) [NoteBo
 
 It provides the same utilities with the same interfaces as the original NBFC, although the implementation differs.
 
-Comparison of NBFC C# and NBFC C99
-----------------------------------
+Comparison of NBFC C# and NBFC Linux
+------------------------------------
 
-|What                             | NBFC C#                               | NBFC C                                      |
+|What                             | NBFC Mono                             | NBFC Linux                                  |
 |---------------------------------|---------------------------------------|----------------------------------------------
 |Portability                      | Crossplatform                         | Linux                                       |
 |Configuration files              | XML (956KB)                           | [JSON](etc/nbfc/configs) (840KB)            |
@@ -27,7 +27,7 @@ Installation
 
 - Arch Linux:
   - Either via AUR (`yaourt -S nbfc-linux`)
-  - Or by using the [PKGBUILD](PKGBUILD)
+  - Or by using one of the PKGBUILDs [nbfc-linux-git](pkgbuilds/nbfc-linux-git/PKGBUILD) [nbfc-linux](pkgbuilds/nbfc-linux/PKGBUILD)
 
 - In general:
   - `make && sudo make install`
@@ -45,7 +45,7 @@ With `sudo nbfc config --set <MODEL>` a configuration is selected.
 
 `sudo nbfc start` will start the service.
 
-It can be queried by `sudo nbfc status`.
+It can be queried by `sudo nbfc status -a`.
 
 If you wish `nbfc_service` to get started on boot, use `sudo systemctl enable nbfc_service`.
 
@@ -55,18 +55,27 @@ Differences en detail
 
 |Files                            | NBFC C#                               | NBFC C                                      |
 |---------------------------------|---------------------------------------|----------------------------------------------
+|Systemd service file             | nbfc.service                          | nbfc\_service.service                       |
+|EC Probing tool                  | ec-probe                              | ec\_probe                                   |
 |Notebook configuration files     | /opt/nbfc/Configs/*.xml               | /etc/nbfc/Configs/*.json                    |
-|Systemd files                    | /etc/systemd/system/nbfc.service      | /etc/systemd/system/nbfc\_service.service   |
-|EC Probing tool                  | /bin/ec-probe                         | /bin/ec\_probe                              |
 |Service binary                   | /opt/nbfc/nbfcservice.sh              | /bin/nbfc\_service                          |
 |PID File                         | /run/nbfc.pid                         | /run/nbfc\_service.pid                      |
 |State file                       | -                                     | /run/nbfc\_service.state.json               |
 |Config file                      | ?                                     | /etc/nbfc/nbfc.json                         |
 
-Autocompleation
----------------
+- The original NBFC service is queried and controlled by the client using TCP/IP.
+- NBFC Linux does not implement any "real" IPC. Information about the service can be queried by reading its state file. The client controls the service by simply rewriting its configuration file and reloading it.
 
-LiNBFC comes with shell completion scripts for bash and zsh.
+- The original NBFC service adjusts the fan speeds in intervals of `EcPollIntervall` according to `TemperatureThresholds`.
+- NBFC Linux directly sets the fan speed (also according to `TemperatureThresholds`).
+
+- The original NBFC service provided an `Autostart` option.
+- NBFC Linux dropped that option, it relies on the systemd service file only.
+
+Shell autocompletion
+--------------------
+
+NBFC-Linux comes with shell completion scripts for bash and zsh.
 
 ```
 ~ $ nbfc_service <TAB>
@@ -82,7 +91,7 @@ LiNBFC comes with shell completion scripts for bash and zsh.
 config   -- List or apply configs
 help     -- Show help
 restart  -- Restart the service
-set      -- Control fans
+set      -- Control fan speed
 start    -- Start the service
 status   -- Show the service status
 stop     -- Stop the service

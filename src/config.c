@@ -46,10 +46,10 @@ static inline Error* double_FromJson(double* out, const nx_json* node) {
     *out = node->val.dbl;
     return err_success();
   }
-   return err_string(0, "Not a double");
+  return err_string(0, "Not a double");
 }
 
-Error* float_FromJson(float* v, const nx_json* json) {
+static inline Error* float_FromJson(float* v, const nx_json* json) {
   double d = 0;
   Error* e = double_FromJson(&d, json);
   e_check();
@@ -57,17 +57,18 @@ Error* float_FromJson(float* v, const nx_json* json) {
   return err_success();
 }
 
-Error* Boolean_FromJson(Boolean* v, const nx_json* json)
-  { return bool_FromJson((bool*) v, json); }
+static inline Error* Boolean_FromJson(Boolean* v, const nx_json* json) {
+  return bool_FromJson((bool*) v, json);
+}
 
-Error* str_FromJson(const char** v, const nx_json* json) {
+static inline Error* str_FromJson(const char** v, const nx_json* json) {
   Error* e = nx_json_get_str(v, json);
   e_check();
   *v = Mem_Strdup(*v);
   return err_success();
 }
 
-Error* RegisterWriteMode_FromJson(RegisterWriteMode* v, const nx_json* json) {
+static Error* RegisterWriteMode_FromJson(RegisterWriteMode* v, const nx_json* json) {
   const char* s = NULL;
   Error* e = nx_json_get_str(&s, json);
   if (e) return e;
@@ -78,7 +79,7 @@ Error* RegisterWriteMode_FromJson(RegisterWriteMode* v, const nx_json* json) {
   return e;
 }
 
-Error* RegisterWriteOccasion_FromJson(RegisterWriteOccasion* v, const nx_json* json) {
+static Error* RegisterWriteOccasion_FromJson(RegisterWriteOccasion* v, const nx_json* json) {
   const char* s = NULL;
   Error* e = nx_json_get_str(&s, json);
   if (e) return e;
@@ -88,7 +89,7 @@ Error* RegisterWriteOccasion_FromJson(RegisterWriteOccasion* v, const nx_json* j
   return e;
 }
 
-Error* OverrideTargetOperation_FromJson(OverrideTargetOperation* v, const nx_json* json) {
+static Error* OverrideTargetOperation_FromJson(OverrideTargetOperation* v, const nx_json* json) {
   const char* s = NULL;
   Error* e = nx_json_get_str(&s, json);
   if (e) return e;
@@ -222,18 +223,18 @@ err:
     return e;
 
   if (r) {
-    StringBuf_Printf(&s, "RegisterWriteConfigurations[%ld]",
+    StringBuf_Printf(&s, "RegisterWriteConfigurations[%td]",
         r - c->RegisterWriteConfigurations.data);
   }
   else if (f) {
-    StringBuf_Printf(&s, "FanConfigurations[%ld]: ",
+    StringBuf_Printf(&s, "FanConfigurations[%td]: ",
         f - c->FanConfigurations.data);
 
     if (o)
-      StringBuf_Printf(&s, "FanSpeedPercentageOverrides[%ld]",
+      StringBuf_Printf(&s, "FanSpeedPercentageOverrides[%td]",
         o - f->FanSpeedPercentageOverrides.data);
     else if (t)
-      StringBuf_Printf(&s, "TemperatureThresholds[%ld]",
+      StringBuf_Printf(&s, "TemperatureThresholds[%td]",
         t - f->TemperatureThresholds.data);
   }
 

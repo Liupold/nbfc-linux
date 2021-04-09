@@ -182,8 +182,8 @@ bool cli99_ConvertOptarg(cli99* self, uint64_t flags) {
   }
 }
 
-static inline bool cli99_OptionExclusiveCheck(cli99* self, const cli99_option_internal* o) {
-  return (! o->group) || (! (my._groups & (1ULL << (o->group - 1))))|| o->count;
+static inline bool cli99_OptionExclusiveCheck(const cli99* self, const cli99_option_internal* o) {
+  return (! o->group) || (! (my._groups & (1ULL << (o->group - 1)))) || o->count;
 }
 
 bool cli99_CheckRequired(cli99* self) {

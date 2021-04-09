@@ -12,11 +12,6 @@ Error* TemperatureFilter_Init(TemperatureFilter* self, int poll_interval, int ti
   if (timespan <= 0)
     return (errno = EINVAL), err_stdlib(0, "timespan");
 
-  if (poll_interval <= 0 || timespan <= 0) {
-    poll_interval = 1;
-    timespan = 1;
-  }
-
   my.index = 0;
   my.ring_buffer.size = timespan / poll_interval + !!(timespan % poll_interval);
   my.ring_buffer.data = (float*) Mem_Calloc(my.ring_buffer.size, sizeof(float));

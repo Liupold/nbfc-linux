@@ -1,23 +1,33 @@
-build: generated src/nbfc_service src/ec_probe
+build: \
+	etc/nbfc/configs \
+	completion/zsh/_ec_probe completion/zsh/_nbfc completion/zsh/_nbfc_service \
+	completion/bash/ec_probe completion/bash/nbfc completion/bash/nbfc_service \
+	ec_probe.md nbfc.md nbfc_service.md nbfc_service.json.md \
+	doc/ec_probe.1 doc/nbfc.1 doc/nbfc_service.json.5 doc/nbfc_service.1 \
+	src/nbfc_service src/ec_probe
 
 install: build
-	# Binaries first
+	# Binaries
 	mkdir -p $(DESTDIR)/usr/bin
 	install nbfc.py          $(DESTDIR)/usr/bin/nbfc
 	install src/nbfc_service $(DESTDIR)/usr/bin/nbfc_service
 	install src/ec_probe     $(DESTDIR)/usr/bin/ec_probe
+	
 	# /etc/systemd/system
 	mkdir -p $(DESTDIR)/etc/systemd/system
 	cp etc/systemd/system/nbfc_service.service $(DESTDIR)/etc/systemd/system/nbfc_service.service
+	
 	# /etc/nbfc/configs/
 	mkdir -p $(DESTDIR)/etc/nbfc
 	cp -r etc/nbfc/configs $(DESTDIR)/etc/nbfc/
+	
 	# Doc
 	mkdir -p $(DESTDIR)/usr/share/man/man{1,5}
 	cp doc/ec_probe.1          $(DESTDIR)/usr/share/man/man1
 	cp doc/nbfc.1              $(DESTDIR)/usr/share/man/man1
 	cp doc/nbfc_service.1      $(DESTDIR)/usr/share/man/man1
 	cp doc/nbfc_service.json.5 $(DESTDIR)/usr/share/man/man5
+	
 	# Completion
 	mkdir -p $(DESTDIR)/usr/share/zsh/site-functions
 	cp completion/zsh/_nbfc          $(DESTDIR)/usr/share/zsh/site-functions/
@@ -29,19 +39,13 @@ install: build
 	cp completion/bash/ec_probe      $(DESTDIR)/usr/share/bash-completion/completions/
 
 clean:
-	rm -rf xml_configs __pycache__ tools/argany/__pycache__
+	rm -rf __pycache__ tools/argany/__pycache__
 	(cd src; make clean)
 
 clean_generated: clean
 	rm -rf ec_probe.md nbfc.md nbfc_service.md nbfc_service.json.md
 	rm -rf etc/nbfc/configs
 	rm -rf doc completion
-
-generated: etc/nbfc/configs \
-	completion/zsh/_ec_probe completion/zsh/_nbfc completion/zsh/_nbfc_service \
-	completion/bash/ec_probe completion/bash/nbfc completion/bash/nbfc_service \
-	ec_probe.md nbfc.md nbfc_service.md nbfc_service.json.md \
-	doc/ec_probe.1 doc/nbfc.1 doc/nbfc_service.json.5 doc/nbfc_service.1
 
 # =============================================================================
 # Binaries ====================================================================
