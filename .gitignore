@@ -1,2 +1,4 @@
 xml_configs
 __pycache__
+etc/nbfc/configs/*.xml
+nbfc/

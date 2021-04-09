@@ -12,15 +12,15 @@ makedepends=('lm_sensors')
 license=('GPL3')
 conflicts=('nbfc' 'nbfc-beta' 'nbfc-linux-git')
 provides=('nbfc')
-source=("https://github.com/braph/nbfc-linux/archive/${pkgver}.tar.gz")
-md5sums=('TODO')
+source=("https://github.com/braph/nbfc-linux/archive/refs/tags/${pkgver}.tar.gz")
+md5sums=('81d07fad6266aab97e5771a10a3a4fb1')
 
 build() {
-  cd nbfc-linux
+  cd nbfc-linux-${pkgver}
   make
 }
 
 package() {
-  cd nbfc-linux
+  cd nbfc-linux-${pkgver}
   make DESTDIR="${pkgdir}" install
 }

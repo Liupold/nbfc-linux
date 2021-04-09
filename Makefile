@@ -57,15 +57,11 @@ src/ec_probe:
 # Configs / XML->JSON Conversion ==============================================
 # =============================================================================
 
-xml_configs:
-	git clone https://github.com/hirschmann/nbfc
-	mv nbfc/Configs xml_configs
-	rm -rf nbfc
-
-etc/nbfc/configs: xml_configs
+etc/nbfc/configs:
 	mkdir -p etc/nbfc/configs
-	./tools/config_to_json.py xml_configs/*
-	mv xml_configs/*.json etc/nbfc/configs
+	[ -e nbfc ] || git clone https://github.com/hirschmann/nbfc
+	./tools/config_to_json.py nbfc/Configs/*
+	mv nbfc/Configs/*.json etc/nbfc/configs/
 
 # =============================================================================
 # Completion ==================================================================
