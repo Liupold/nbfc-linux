@@ -26,7 +26,8 @@ argp.add_argument('-c', '--config-file',         help='Use alternative config fi
 argp.add_argument('-s', '--state-file',          help='Write state to an alternative file (default /var/run/nbfc_service.state.json)', metavar='state.json')
 argp.add_argument('-e', '--embedded-controller', help='Specify embedded controller to use', metavar='EC', choices=['dummy','ec_linux', 'ec_sys_linux'])
 
-EPILOG = '''
+argp.markdown_prolog = PROLOG
+argp.markdown_epilog = '''
 FILES
 -----
 
@@ -51,7 +52,7 @@ EXIT STATUS
 BUGS
 ----
 
-Bugs to https://github.com/braph/nbfc-dev
+Bugs to https://github.com/braph/nbfc-linux
 
 AUTHOR
 ------
@@ -63,12 +64,3 @@ SEE ALSO
 
 nbfc(1), nbfc\_service.json(5), fancontrol(1)'''
 
-if __name__ == '__main__':
-    argp.epilog = EPILOG
-    p = Parser.from_ArgumentParser(argp)
-
-    if   sys.argv[1] == 'bash':     generate_bash_completion(p)
-    elif sys.argv[1] == 'zsh':      generate_zsh_completion(p)
-    elif sys.argv[1] == 'markdown':
-        print(PROLOG)
-        print(generate_markdown(p))

@@ -103,6 +103,9 @@ def generate_markdown(p, prog=None):
 
     r = ''
 
+    if hasattr(p.parser, 'markdown_prolog'):
+        r += p.parser.markdown_prolog
+
     if p.parser.description:
         r += 'DESCRIPTION\n'
         r += '-----------\n\n'
@@ -145,6 +148,9 @@ def generate_markdown(p, prog=None):
     if p.parser.epilog:
         r += p.parser.epilog
 
+    if hasattr(p.parser, 'markdown_epilog'):
+        r += p.parser.markdown_epilog
+
     return r
 
 def c_identifier(s):
@@ -167,6 +173,8 @@ def generate_printf_usage(p, macro=None, prog='%s'):
     if prog is None:
         prog = p.parser.prog
 
+    r = ''
+
     if macro is None:
         macro = c_identifier(p.parser.prog).upper() + '_HELP_TEXT'
 
@@ -175,12 +183,14 @@ def generate_printf_usage(p, macro=None, prog='%s'):
     help = str_to_c(help)
     help = help.replace('%', '%%')
     help = help.replace('$$$ PROG $$$', prog)
-    print(define_macro(macro, help))
+    r += '%s\n' % define_macro(macro, help)
 
     if p.subparsers:
         for name, sub in p.subparsers.items():
             sub.parser.prog = name
-            generate_printf_usage(sub, None, '%s '+name)
+            r += '%s\n' % generate_printf_usage(sub, None, '%s '+name)
+
+    return r
 
 def find_ArgumentParser(module):
     for v in dir(module):
@@ -218,11 +228,12 @@ if __name__ == '__main__':
     p = Parser.from_ArgumentParser(argp)
     RemoveHelpActions(p)
 
-    if   action == 'bash':     bash.generate_completion(p)
-    elif action == 'fish':     fish.generate_completion(p)
-    elif action == 'zsh':      zsh.generate_completion(p)
-    elif action == 'printf':   generate_printf_usage(p)
-    elif action == 'markdown':
-        #print(PROLOG)
-        print(generate_markdown(p))
+    r = {
+        'bash':     bash.generate_completion,
+        'fish':     fish.generate_completion,
+        'zsh':      zsh.generate_completion,
+        'printf':   generate_printf_usage,
+        'markdown': generate_markdown
+    }[action](p)
+    print(r)
 

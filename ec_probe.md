@@ -6,7 +6,6 @@ NAME
 
 nbfc\_service - Notebook FanControl service
 
-
 DESCRIPTION
 -----------
 
@@ -115,7 +114,6 @@ OPTIONS
 All input values are interpreted as decimal numbers by default.
 Hexadecimal values may be entered by prefixing them with "0x".
 
-
 FILES
 -----
 
@@ -140,7 +138,7 @@ EXIT STATUS
 BUGS
 ----
 
-Bugs to https://github.com/braph/nbfc-dev
+Bugs to https://github.com/braph/nbfc-linux
 
 AUTHOR
 ------

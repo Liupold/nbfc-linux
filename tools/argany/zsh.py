@@ -94,7 +94,8 @@ def generate_completion(p, prog=None):
     if prog is None:
         prog = p.parser.prog
 
-    print(f'#compdef {prog}\n')
-    print(_zsh_generate_parser_func(p, '_'+prog))
-    print(f'_{prog} "$@"')
+    r  = f'#compdef {prog}\n\n'
+    r += _zsh_generate_parser_func(p, '_'+prog)
+    r += f'\n_{prog} "$@"'
+    return r
 

@@ -14,7 +14,7 @@ Comparison of NBFC C# and NBFC Linux
 |Configuration files              | XML (956KB)                           | [JSON](etc/nbfc/configs) (840KB)            |
 |Runtime                          | Mono                                  | Native                                      |
 |Memory consumption (ps\_mem)     | ~50MB                                 | ~350KB                                      |
-|Package size (pkg.tar.gz)        | 448K	                                | 90K                                         |
+|Package size (pkg.tar.gz)        | 448K	                                | 100K                                        |
 |Service control rights           | Any user                              | Only root                                   |
 |IPC Concept                      | TCP/IP                                | Files                                       |
 |IPC Protocol                     | Binary                                | JSON                                        |
@@ -27,7 +27,7 @@ Installation
 
 - Arch Linux:
   - Either via AUR (`yaourt -S nbfc-linux`)
-  - Or by using one of the PKGBUILDs [nbfc-linux-git](pkgbuilds/nbfc-linux-git/PKGBUILD) [nbfc-linux](pkgbuilds/nbfc-linux/PKGBUILD)
+  - Or by using one of the PKGBUILDs [nbfc-linux-git](pkgbuilds/nbfc-linux-git/PKGBUILD) / [nbfc-linux](pkgbuilds/nbfc-linux/PKGBUILD)
 
 - In general:
   - `make && sudo make install`
@@ -75,7 +75,7 @@ Differences en detail
 Shell autocompletion
 --------------------
 
-NBFC-Linux comes with shell completion scripts for bash and zsh.
+NBFC-Linux comes with shell completion scripts for bash, fish and zsh.
 
 ```
 ~ $ nbfc_service <TAB>

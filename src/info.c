@@ -6,7 +6,7 @@
 #include "stringbuf.h"
 #include "macros.h"
 
-#include <unistd.h>   // ftruncate, getpid
+#include <unistd.h>   // getpid
 #include <sys/stat.h> // chmod
 
 static const char* Info_File;

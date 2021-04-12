@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import sys, argparse
+import argparse
 
 PROLOG = '''\
 NBFC\_SERVICE 1 "MARCH 2021" Notebook FanControl
@@ -39,7 +39,8 @@ All input values are interpreted as decimal numbers by default.
 Hexadecimal values may be entered by prefixing them with "0x".
 '''
 
-EPILOG = '''
+argp.markdown_prolog = PROLOG
+argp.markdown_epilog = '''
 FILES
 -----
 
@@ -64,7 +65,7 @@ EXIT STATUS
 BUGS
 ----
 
-Bugs to https://github.com/braph/nbfc-dev
+Bugs to https://github.com/braph/nbfc-linux
 
 AUTHOR
 ------
@@ -76,13 +77,3 @@ SEE ALSO
 
 nbfc(1), nbfc\_service(1), nbfc\_service.json(5), fancontrol(1)'''
 
-if __name__ == '__main__':
-    from argany import *
-    p = Parser.from_ArgumentParser(argp)
-
-    if   sys.argv[1] == 'bash':     generate_bash_completion(p)
-    elif sys.argv[1] == 'zsh':      generate_zsh_completion(p)
-    elif sys.argv[1] == 'markdown':
-        print(PROLOG)
-        print(generate_markdown(p))
-        print(EPILOG)

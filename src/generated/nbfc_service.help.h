@@ -16,3 +16,4 @@
  "  -e EC, --embedded-controller EC\n"\
  "                        Specify embedded controller to use\n"\
  ""
+

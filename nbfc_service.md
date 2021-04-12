@@ -6,7 +6,6 @@ NAME
 
 nbfc\_service - Notebook FanControl service
 
-
 DESCRIPTION
 -----------
 
@@ -66,7 +65,7 @@ EXIT STATUS
 BUGS
 ----
 
-Bugs to https://github.com/braph/nbfc-dev
+Bugs to https://github.com/braph/nbfc-linux
 
 AUTHOR
 ------

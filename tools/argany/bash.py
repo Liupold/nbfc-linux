@@ -77,5 +77,5 @@ def generate_completion(p, prog=None):
         r += _bash_complete_parser(sub, '_%s_%s' % (prog, name), False)
 
     r += 'complete -F _%s %s' % (prog, prog)
-    print(r)
+    return r
 

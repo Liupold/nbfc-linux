@@ -11,8 +11,7 @@ module = importlib.import_module('nbfc')
 argp = getattr(module, 'argp')
 #from nbfc import argp
 
-
-PROLOG = '''\
+argp.markdown_prolog = '''\
 NBFC\_SERVICE 1 "MARCH 2021" Notebook FanControl
 ================================================
 
@@ -23,7 +22,7 @@ nbfc\_service - Notebook FanControl service
 
 '''
 
-EPILOG = '''
+argp.markdown_epilog = '''
 FILES
 -----
 
@@ -42,7 +41,7 @@ FILES
 BUGS
 ----
 
-Bugs to https://github.com/braph/nbfc-dev
+Bugs to https://github.com/braph/nbfc-linux
 
 AUTHOR
 ------
@@ -54,10 +53,3 @@ SEE ALSO
 
 nbfc_service(1), nbfc\_service.json(5), ec_probe(1), fancontrol(1)'''
 
-if __name__ == '__main__':
-    p = Parser.from_ArgumentParser(argp)
-
-    if sys.argv[1] == 'markdown':
-        print(PROLOG)
-        print(generate_markdown(p))
-        print(EPILOG)

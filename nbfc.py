@@ -2,122 +2,142 @@
 
 import sys, os, time, argparse, json
 
-CONFIG_DIR  = '/etc/nbfc'
-CONFIGS_DIR = '/etc/nbfc/configs'
-CONFIG_FILE = '/etc/nbfc/nbfc.json'
-STATE_FILE  = '/var/run/nbfc_service.state.json'
-PID_FILE    = '/var/run/nbfc_service.pid'
+# Unused - depends on `dmidecode` module
+#def dmidecode_py_get_system_product():
+#    import dmidecode
+#    r = dmidecode.system()
+#    def find_product(d):
+#        if type(d) is dict:
+#            for key, value in d.items():
+#                if key == 'Product Name':
+#                    return str(value, encoding='UTF-8')
+#                r = find_product(value)
+#                if r:
+#                    return r
+#        else:
+#            return None
+#    return find_product(r)
 
-def get_service_pid():
-    with open(PID_FILE) as fh:
-        return int(fh.read())
-
-def json_loadf(path):
-    with open(path, 'r') as fh:
-        return json.load(fh)
-
-def json_dumpf(obj, path):
-    with open(path, 'w') as fh:
-        json.dump(obj, fh)
-        
-
-def dmidecode_system_product():
-    import dmidecode
-    r = dmidecode.system()
-    def find_product(d):
-        if type(d) is dict:
-            for key, value in d.items():
-                if key == 'Product Name':
-                    return str(value, encoding='UTF-8')
-                r = find_product(value)
-                if r:
-                    return r
-        else:
-            return None
-    return find_product(r)
-
-def subprocess_system_product():
+def dmidecode_bin_get_system_product():
     import subprocess
     proc = subprocess.Popen(['dmidecode', '-s', 'system-product-name'], stdout=subprocess.PIPE)
     return str(proc.communicate()[0], encoding='UTF-8')
 
-def find_recommended():
-    def word_difference(a, b):
-        a = a.lower()
-        b = b.lower()
-        if a == b: return 0
-        diff = 0
-        for a_c, b_c in zip(a, b):
-            diff += abs(ord(a_c) - ord(b_c))
-        return diff
+def get_system_product():
+    return dmidecode_bin_get_system_product()
 
-    def words_difference(a, b):
-        A = a.lower().split()
-        B = b.lower().split()
-        l = len(max(A, B))
-        diff = 0
-        for a, b in zip(A, B):
-            diff += word_difference(a, b)
-        diff /= l
-        return diff
+class NbfcService:
+    CONFIG_DIR  = '/etc/nbfc'
+    CONFIGS_DIR = '/etc/nbfc/configs'
+    CONFIG_FILE = '/etc/nbfc/nbfc.json'
+    STATE_FILE  = '/var/run/nbfc_service.state.json'
+    PID_FILE    = '/var/run/nbfc_service.pid'
 
-    product = None
-    try:
-        product = dmidecode_system_product()
-    except:
-        product = subprocess_system_product()
+    def get_service_pid(self):
+        with open(self.PID_FILE) as fh:
+            return int(fh.read())
 
-    if not product:
-        raise Exception('Could not get product name')
+    def start(self, readonly=False):
+        try:
+            pid = self.get_service_pid()
+            print('Service already running:', pid)
+            return 0
+        except:
+            return os.system('nbfc_service -f%s' % ('-r' if readonly else ''))
 
-    files = os.listdir(CONFIGS_DIR)
-    files = [os.path.splitext(f)[0] for f in files]
-    files = [(f, words_difference(product, f)) for f in files]
-    files.sort(key=lambda f: f[1])
-    return files
+    def stop(self):
+        import signal
+        os.kill(self.get_service_pid(), signal.SIGINT)
+
+    def restart(self, readonly=False):
+        try:     self.stop()
+        except:  pass
+        time.sleep(1)
+        self.start(readonly)
+
+    def list_configs(self):
+        return os.listdir(self.CONFIGS_DIR)
+
+    def recommended_configs(self, product_name):
+        def word_difference(a, b):
+            a = a.lower()
+            b = b.lower()
+            if a == b: return 0
+            diff = 0
+            for a_c, b_c in zip(a, b):
+                diff += abs(ord(a_c) - ord(b_c))
+            return diff
+
+        def words_difference(a, b):
+            A = a.lower().split()
+            B = b.lower().split()
+            l = len(max(A, B))
+            diff = 0
+            for a, b in zip(A, B):
+                diff += word_difference(a, b)
+            diff /= l
+            return diff
+
+        product = get_system_product()
+        if not product:
+            raise Exception('Could not get product name')
+
+        files = os.listdir(self.CONFIGS_DIR)
+        files = [os.path.splitext(f)[0] for f in files]
+        files = [(f, words_difference(product, f)) for f in files]
+        files.sort(key=lambda f: f[1])
+        return files
+
+    def get_status(self):
+        if not os.path.exists(self.STATE_FILE):
+            raise Exception('Service not running')
+
+        with open(self.STATE_FILE, 'r') as fh:
+            return json.load(fh)
+
+    def get_config(self):
+        try:
+            with open(self.CONFIG_FILE, 'r') as fh:
+                return json.load(fh)
+        except:
+            return {}
+
+service = NbfcService()
 
 def config(opts):
-    try:    cfg = json_loadf(CONFIG_FILE)
-    except: cfg = {}
-
     if opts.list:
-        files = os.listdir(CONFIGS_DIR)
+        files = service.list_configs()
         for f in files:
             print(os.path.splitext(f)[0])
 
     elif opts.recommend:
-        files = find_recommended()
+        files = service.recommended_configs(get_system_product())
         if len(files) and files[0][1] == 0:
             print(files[0][0])
         else:
             for f in files[:15]:
                 print(f[0])
 
-    elif opts.set:
-        if opts.set == 'auto':
-            files = find_recommended()
+    elif opts.set or opts.apply:
+        cfg = service.get_config()
+        model = opts.set if opts.set else opts.apply
+
+        if model == 'auto':
+            files = service.recommended_configs(get_system_product())
             if len(files) and files[0][1] == 0:
-                opts.set = files[0][0]
+                model = files[0][0]
             else:
                 raise Exception("Try `nbfc config -r` for recommended configs")
 
-        cfg['SelectedConfigId'] = opts.set
-        json_dumpf(cfg, CONFIG_FILE)
+        cfg['SelectedConfigId'] = model
+        service.set_config(cfg)
 
-    elif opts.apply:
-        if opts.apply == 'auto':
-            files = find_recommended()
-            if len(files) and files[0][1] == 0:
-                opts.apply = files[0][0]
-            else:
-                raise Exception("Try `nbfc config -r` for recommended configs")
-
-        cfg['SelectedConfigId'] = opts.apply
-        json_dumpf(cfg, CONFIG_FILE)
-        start(None)
+        if opts.apply:
+            service.restart()
 
 def set(opts):
-    cfg = json_loadf(CONFIG_FILE)
+    cfg = service.get_config()
+
     if 'TargetFanSpeeds' not in cfg:
         cfg['TargetFanSpeeds'] = []
     targetFanSpeeds = cfg['TargetFanSpeeds']
@@ -127,8 +147,9 @@ def set(opts):
             break
         except IndexError:
             targetFanSpeeds.append(-1)
-    json_dumpf(cfg, CONFIG_FILE)
-    restart(None)
+
+    service.set_config(cfg)
+    service.restart()
 
 def status(opts):
     def print_service_status(status):
@@ -147,12 +168,7 @@ def status(opts):
 
     while True:
         try:
-            if not os.path.exists(STATE_FILE):
-                raise Exception('Service not running')
-
-            with open(STATE_FILE) as fh:
-                status = json.load(fh)
-
+            status = service.get_status()
             print_service_status(status)
             for fan in status['fans']:
                 print()
@@ -170,31 +186,14 @@ def status(opts):
             except KeyboardInterrupt: return
             print()
 
-
 def start(opts):
-    try:
-        pid = get_service_pid()
-        print('Service already running:', pid)
-    except:
-        if not opts:
-            sys.exit(os.system('nbfc_service -f'))
-        elif opts.readonly:
-            sys.exit(os.system('nbfc_service -f -r'))
-        else:
-            sys.exit(os.system('nbfc_service -f'))
+    service.start(opts.readonly)
 
 def stop(opts):
-    import signal
-    os.kill(get_service_pid(), signal.SIGINT)
+    service.stop()
 
 def restart(opts):
-    try:
-        stop(opts)
-    except:
-        pass
-    time.sleep(1)
-    start(opts)
-
+    service.restart(opts.readonly)
 
 argp = argparse.ArgumentParser(prog='nbfc', description='NoteBook FanControl CLI Client')
 subp = argp.add_subparsers(description='commands')
@@ -246,8 +245,51 @@ if __name__ == '__main__':
         os.environ['PATH'] += ':.'
         os.environ['PATH'] += ':./src'
 
-    if not os.path.isdir(CONFIG_DIR):
-        os.path.mkdir(CONFIG_DIR)
+    if not os.path.isdir(service.CONFIG_DIR):
+        os.path.mkdir(service.CONFIG_DIR)
 
     opts = argp.parse_args()
     opts.cmd(opts)
+
+else:
+    argp.markdown_prolog = '''\
+NBFC\_SERVICE 1 "MARCH 2021" Notebook FanControl
+================================================
+
+NAME
+----
+
+nbfc\_service - Notebook FanControl service
+
+'''
+
+    argp.markdown_epilog = '''
+FILES
+-----
+
+*/var/run/nbfc_service.pid*
+  File containing the PID of current running nbfc\_service.
+
+*/var/run/nbfc_service.state.json*
+  State file of nbfc\_service. Updated every *EcPollInterval* miliseconds See nbfc\_service.json(5) for further details.
+
+*/etc/nbfc/nbfc.json*
+  The system wide configuration file. See nbfc\_service.json(5) for further details.
+
+*/etc/nbfc/configs/\*.json*
+  Configuration files for various notebook models. See nbfc\_service.json(5) for further details.
+
+BUGS
+----
+
+Bugs to https://github.com/braph/nbfc-linux
+
+AUTHOR
+------
+
+Benjamin Abendroth (braph93@gmx.de)
+
+SEE ALSO
+--------
+
+nbfc_service(1), nbfc\_service.json(5), ec_probe(1), fancontrol(1)'''

@@ -20,17 +20,20 @@
  ""
 #define DUMP_HELP_TEXT "usage: %s dump\n"\
  ""
+
 #define READ_HELP_TEXT "usage: %s read REGISTER\n"\
  "\n"\
  "positional arguments:\n"\
  "  REGISTER  Register source\n"\
  ""
+
 #define WRITE_HELP_TEXT "usage: %s write REGISTER VALUE\n"\
  "\n"\
  "positional arguments:\n"\
  "  REGISTER  Register destination\n"\
  "  VALUE     Value to write\n"\
  ""
+
 #define MONITOR_HELP_TEXT "usage: %s monitor [-i seconds] [-t seconds] [-r REPORT] [-c] [-d]\n"\
  "\n"\
  "optional arguments:\n"\
@@ -44,3 +47,5 @@
  "  -d, --decimal         Output readings in decimal format instead of\n"\
  "                        hexadecimal format\n"\
  ""
+
+

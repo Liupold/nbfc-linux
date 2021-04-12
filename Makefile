@@ -117,13 +117,13 @@ completion/fish/ec_probe.fish: completion/fish/
 # =============================================================================
 
 ec_probe.md: ./tools/argany/ec_probe.py
-	./tools/argany/ec_probe.py markdown > ec_probe.md
+	./tools/argany/argany.py markdown ./tools/ec_probe.py > ec_probe.md
 
 nbfc.md: ./tools/argany/nbfc.argany.py
-	./tools/argany/nbfc.argany.py markdown > nbfc.md
+	./tools/argany/argany.py markdown nbfc.py > nbfc.md
 
 nbfc_service.md: ./tools/argany/nbfc_service.py
-	./tools/argany/nbfc_service.py markdown > nbfc_service.md
+	./tools/argany/argany.py markdown ./tools/nbfc_service.py > nbfc_service.md
 
 nbfc_service.json.md: ./tools/config_to_md.py ./tools/config.json
 	./tools/config_to_md.py  > nbfc_service.json.md
