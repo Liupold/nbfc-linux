@@ -28,17 +28,24 @@ def get_help(o):
 def action_takes_args(action):
     try:    return action.nargs in '?+*'
     except: return action.nargs != 0
+    #return isinstance(action, argparse.BooleanOptionalAction)
 
 def action_requires_args(action):
-    try:    return action.nargs in '+'
-    except: return bool(action.nargs)
+    if action.nargs: # nargs takes precedence
+        return action.nargs == '+' or (action.nargs.isdigit() and int(action.nargs))
+
+    # Check by action
+    return isinstance(action, (
+        argparse._StoreAction,
+        argparse._AppendAction,
+        argparse._ExtendAction) )
 
 def action_get_completer(action):
-    if hasattr(action, 'complete'):
-        return getattr(action, 'complete')
+    if hasattr(action, 'completer'):
+        return getattr(action, 'completer')
 
     if action.choices:
-        if isinstance(action.choices, list):
+        if isinstance(action.choices, (list, tuple)):
             return ('choices', action.choices)
 
         if isinstance(action.choices, dict):
@@ -68,25 +75,25 @@ class ShellCompleter:
     def none(self):
         return ''
 
-    def signals(self):
-        return self.fallback('signals', 'choices', ['SIGINT', 'SIGTERM', 'SIGKILL'])
+    def signal(self):
+        return self.fallback('signal', 'choices', ['SIGINT', 'SIGTERM', 'SIGKILL'])
 
     def int(self, *_range):
         if not _range: _range = (20,)
         return self.fallback('int', 'choices', list(range(*_range)[0:20]) + ['...'])
 
-    def directories(self, glob_pattern=None):
-        return self.fallback('directories', 'files', glob_pattern)
+    def directory(self, glob_pattern=None):
+        return self.fallback('directory', 'file', glob_pattern)
 
-    def processes(self):
-        return self.fallback('processes', 'none')
+    def process(self):
+        return self.fallback('process', 'none')
 
     def command(self):
-        return self.fallback('commands', 'files')
+        return self.fallback('command', 'file')
 
-    def users(self):
-        return self.fallback('users', 'none')
+    def user(self):
+        return self.fallback('user', 'none')
 
-    def groups(self):
-        return self.fallback('groups', 'none')
+    def group(self):
+        return self.fallback('group', 'none')
 

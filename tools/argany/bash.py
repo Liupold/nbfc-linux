@@ -3,22 +3,22 @@
 import shell
 
 class BashCompleter(shell.ShellCompleter):
-    def files(self, glob_pattern=None):
+    def file(self, glob_pattern=None):
         if not glob_pattern:
             return '$(compgen -f -- $cur)'
         else:
             return '$(compgen -G %s -- $cur)' % shell.escape(glob_pattern)
 
-    def users(self):
+    def user(self):
         return '$(compgen -A user -- $cur)'
 
-    def groups(self):
+    def group(self):
         return '$(compgen -A group -- $cur)'
 
-    def signals(self):
+    def signal(self):
         return '$(compgen -A signal -- $cur)'
 
-    def hostnames(self):
+    def hostname(self):
         return '$(compgen -A hostname -- $cur)'
 
     def choices(self, choices):

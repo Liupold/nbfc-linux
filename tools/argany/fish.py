@@ -1,13 +1,33 @@
 #!/usr/bin/python3 -B
 
-import shell
+import sys, shell
 
 class FishCompleter(shell.ShellCompleter):
     def none(self):
-        return ''
+        return None
 
     def choices(self, choices):
-        return shell.escape("%s" % (' '.join(shell.escape(str(c)) for c in choices)))
+        return shell.escape(' '.join(shell.escape(str(c)) for c in choices))
+
+    def signal(self):
+        return "'(__fish_make_completion_signals)'"
+
+    def directory(self, glob_pattern=None):
+        if glob_pattern:
+            return "'(__fish_complete_directories %s)'" % shell.escape(glob_pattern)
+        return "'(__fish_complete_directories)'"
+
+    def process(self):
+        return "'(__fish_complete_proc)'"
+
+    def command(self):
+        return "'(__fish_complete_command)'"
+
+    def user(self):
+        return "'(__fish_complete_users)'"
+
+    def group(self):
+        return "'(__fish_complete_groups)'"
 
 _fish_complete = FishCompleter().complete
 
@@ -43,7 +63,7 @@ def _fish_generate_subcommands_complete(p, prog):
         shell.escape(prog), subcommands, shell.escape(name), shell.escape(shell.get_help(sub)))
     return r
 
-def _fish_generate_parser_func(p, prog, subparser=None):
+def _fish_generate_completion(p, prog, subparser=None):
     r = ''
     for a in p.actions:
         r += '%s\n' % _fish_complete_action(a, prog, subparser)
@@ -52,7 +72,7 @@ def _fish_generate_parser_func(p, prog, subparser=None):
         r += _fish_generate_subcommands_complete(p, prog)
 
         for name, sub in p.subparsers.items():
-            r += _fish_generate_parser_func(sub, prog, name)
+            r += _fish_generate_completion(sub, prog, name)
 
     return r
 
@@ -60,5 +80,5 @@ def generate_completion(p, prog=None):
     if prog is None:
         prog = p.parser.prog
 
-    return _fish_generate_parser_func(p, prog)
+    return _fish_generate_completion(p, prog)
 
