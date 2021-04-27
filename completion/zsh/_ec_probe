@@ -2,8 +2,8 @@
 
 _ec_probe() {
   _arguments \
-    '(-h --help)'{-h,--help}'[show this help message and exit]'::'()'\
-    '(-e --embedded-controller)'{-e+,--embedded-controller=}'[Specify embedded controller to use]':EC:'(ec_linux ec_sys_linux)'\
+    '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'\
+    '(--embedded-controller -e)'{--embedded-controller=,-e+}'[Specify embedded controller to use]':EC:'(ec_linux ec_sys_linux)'\
     ':command:_ec_probe_subcommands'\
     '*::arg:->args'
   for w in $line; do
@@ -28,30 +28,30 @@ _ec_probe_subcommands() {
 
 _ec_probe_dump() {
   _arguments \
-    '(-h --help)'{-h,--help}'[show this help message and exit]'::'()'
+    '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'
 }
 
 _ec_probe_read() {
   _arguments \
-    '(-h --help)'{-h,--help}'[show this help message and exit]'::'()'\
+    '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'\
     :'Register source':'({0..255..1})'
 }
 
 _ec_probe_write() {
   _arguments \
-    '(-h --help)'{-h,--help}'[show this help message and exit]'::'()'\
+    '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'\
     :'Register destination':'({0..255..1})'\
     :'Value to write':'({0..255..1})'
 }
 
 _ec_probe_monitor() {
   _arguments \
-    '(-h --help)'{-h,--help}'[show this help message and exit]'::'()'\
-    '(--interval -i)'{-i+,--interval=}'[Monitored timespan]':seconds:'({0..255})'\
-    '(--timespan -t)'{-t+,--timespan=}'[Set poll intervall]':seconds:'({0..255})'\
-    '(-r --report)'{-r+,--report=}'[Save all readings as a CSV file]':report:'()'\
-    '(--clearly -c)'{-c,--clearly}'[Blanks out consecutive duplicate readings]'::'()'\
-    '(-d --decimal)'{-d,--decimal}'[Output readings in decimal format instead of hexadecimal format]'::'()'
+    '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'\
+    '(--interval -i)'{--interval=,-i+}'[Monitored timespan]':seconds:'({0..255})'\
+    '(--timespan -t)'{--timespan=,-t+}'[Set poll intervall]':seconds:'({0..255})'\
+    '(--report -r)'{--report=,-r+}'[Save all readings as a CSV file]':report:'()'\
+    '(--clearly -c)'{--clearly,-c}'[Blanks out consecutive duplicate readings]'::'()'\
+    '(--decimal -d)'{--decimal,-d}'[Output readings in decimal format instead of hexadecimal format]'::'()'
 }
 
 _ec_probe "$@"

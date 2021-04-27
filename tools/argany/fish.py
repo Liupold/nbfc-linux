@@ -57,7 +57,7 @@ def _fish_get_exclusive_options(info, p, action):
         l.update(a.option_strings)
 
     if l:
-        s = ' '.join(o[2:] if o.startswith('--') else '-s '+o[1] for o in l)
+        s = ' '.join(o[2:] if o.startswith('--') else '-s '+o[1] for o in sorted(l))
         return " -n 'not __fish_contains_opt %s'" % s
 
     return ''

@@ -52,11 +52,11 @@ class BashCompleter(shell.ShellCompleter):
 
     def int(self, *range):
         return compgen((
-            '-W "{0..255}"',
-            '-W "{0..%d}"',
-            '-W "{%d..%d}"',
-            '-W "{%d..%d..%d}"'
-        )[len(range)] % range)
+            "-W '{{0..255}}'",
+            "-W '{{0..{1}}}'",
+            "-W '{{{0}..{1}}}'",
+            "-W '{{{0}..{2}..{1}}}'"
+        )[len(range)].format(*range))
 
 _bash_complete = BashCompleter().complete
 
@@ -67,7 +67,7 @@ def _bash_complete_action(action, append=True):
     return 'COMPREPLY%s=(%s)' % (('+' if append else ''), r)
 
 def _bash_case_option_strings(action):
-    return '|'.join(map(shell.escape, action.option_strings))
+    return '|'.join(map(shell.escape, sorted(action.option_strings)))
 
 def _bash_complete_parser(info, p, funcname, parent_parsers=[]):
     funcname = shell.make_identifier(funcname)
@@ -96,11 +96,11 @@ def _bash_complete_parser(info, p, funcname, parent_parsers=[]):
             exclude_pattern = ''
             if len(short_opts) and len(long_opts):
                 exclude_pattern = "-@([%s]|-@(%s))" % (
-                    ''.join(short_opts), '|'.join(long_opts))
+                    ''.join(sorted(short_opts)), '|'.join(sorted(long_opts)))
             elif len(short_opts):
-                exclude_pattern = "-@([%s])" % ''.join(short_opts)
+                exclude_pattern = "-@([%s])" % ''.join(sorted(short_opts))
             elif len(long_opts):
-                exclude_pattern = "--@(%s)" % '|'.join(long_opts)
+                exclude_pattern = "--@(%s)" % '|'.join(sorted(long_opts))
 
             r += '  _count_args "" "%s"\n' % exclude_pattern
 

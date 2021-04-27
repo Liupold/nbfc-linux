@@ -2,7 +2,7 @@
 
 _nbfc() {
   _arguments \
-    '(--help -h)'{-h,--help}'[show this help message and exit]'::'()'\
+    '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'\
     ':command:_nbfc_subcommands'\
     '*::arg:->args'
   for w in $line; do
@@ -33,52 +33,52 @@ _nbfc_subcommands() {
 
 _nbfc_start() {
   _arguments \
-    '(--help -h)'{-h,--help}'[show this help message and exit]'::'()'\
-    '(--enabled -e)'{-e,--enabled}'[Start in enabled mode (default)]'::'()'\
-    '(--readonly -r)'{-r,--readonly}'[Start in read-only mode]'::'()'
+    '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'\
+    '(--enabled -e)'{--enabled,-e}'[Start in enabled mode (default)]'::'()'\
+    '(--readonly -r)'{--readonly,-r}'[Start in read-only mode]'::'()'
 }
 
 _nbfc_stop() {
   _arguments \
-    '(--help -h)'{-h,--help}'[show this help message and exit]'::'()'
+    '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'
 }
 
 _nbfc_restart() {
   _arguments \
-    '(--help -h)'{-h,--help}'[show this help message and exit]'::'()'\
-    '(--enabled -e)'{-e,--enabled}'[Restart in enabled mode (default)]'::'()'\
-    '(--readonly -r)'{-r,--readonly}'[Restart in read-only mode]'::'()'
+    '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'\
+    '(--enabled -e)'{--enabled,-e}'[Restart in enabled mode (default)]'::'()'\
+    '(--readonly -r)'{--readonly,-r}'[Restart in read-only mode]'::'()'
 }
 
 _nbfc_status() {
   _arguments \
-    '(--help -h)'{-h,--help}'[show this help message and exit]'::'()'\
-    '(-s --fan -f -a --all --service)'{-a,--all}'[Show service and fan status (default)]'::'()'\
-    '(-s --fan -f -a --all --service)'{-s,--service}'[Show service status]'::'()'\
-    '(-s --fan -f -a --all --service)'{-f+,--fan=}'[Show fan status]':'FAN INDEX':'({0..255})'\
-    '(--watch -w)'{-w+,--watch=}'[Show status periodically]':SECONDS:'()'
+    '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'\
+    '(--all --fan --service -a -f -s)'{--all,-a}'[Show service and fan status (default)]'::'()'\
+    '(--all --fan --service -a -f -s)'{--service,-s}'[Show service status]'::'()'\
+    '(--all --fan --service -a -f -s)'{--fan=,-f+}'[Show fan status]':'FAN INDEX':'({0..255})'\
+    '(--watch -w)'{--watch=,-w+}'[Show status periodically]':SECONDS:'()'
 }
 
 _nbfc_config() {
   _arguments \
-    '(--help -h)'{-h,--help}'[show this help message and exit]'::'()'\
-    '(-s --set -l -r -a --list --apply --recommend)'{-l,--list}'[List all available configs (default)]'::'()'\
-    '(-s -l --set -r -a --list --apply --recommend)'{-s+,--set=}'[Set a config]':config:'()'\
-    '(-s -l --set -r -a --list --apply --recommend)'{-a+,--apply=}'[Set a config and enable fan control]':config:'()'\
-    '(-s -r -l --set -a --list --apply --recommend)'{-r,--recommend}'[List configs which may work for your device]'::'()'
+    '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'\
+    '(--apply --list --recommend --set -a -l -r -s)'{--list,-l}'[List all available configs (default)]'::'()'\
+    '(--apply --list --recommend --set -a -l -r -s)'{--set=,-s+}'[Set a config]':config:'()'\
+    '(--apply --list --recommend --set -a -l -r -s)'{--apply=,-a+}'[Set a config and enable fan control]':config:'()'\
+    '(--apply --list --recommend --set -a -l -r -s)'{--recommend,-r}'[List configs which may work for your device]'::'()'
 }
 
 _nbfc_set() {
   _arguments \
-    '(--help -h)'{-h,--help}'[show this help message and exit]'::'()'\
-    '(-s --speed --auto -a)'{-a,--auto}"[Set fan speed to 'auto']"::'()'\
-    '(-s -a --auto --speed)'{-s+,--speed=}'[Set fan speed to <value>]':PERCENT:'()'\
-    '(--fan -f)'{-f+,--fan=}'[Fan index (zero based)]':'FAN INDEX':'({0..255})'
+    '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'\
+    '(--auto --speed -a -s)'{--auto,-a}"[Set fan speed to 'auto']"::'()'\
+    '(--auto --speed -a -s)'{--speed=,-s+}'[Set fan speed to <value>]':PERCENT:'()'\
+    '(--fan -f)'{--fan=,-f+}'[Fan index (zero based)]':'FAN INDEX':'({0..255})'
 }
 
 _nbfc_help() {
   _arguments \
-    '(--help -h)'{-h,--help}'[show this help message and exit]'::'()'
+    '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'
 }
 
 _nbfc "$@"

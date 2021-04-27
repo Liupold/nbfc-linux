@@ -83,7 +83,7 @@ def _zsh_get_exclusive_options(info, p, action):
     l = set(action.option_strings)
     for a in info.get_conflicting_options(action):
         l.update(a.option_strings)
-    return ' '.join(l)
+    return ' '.join(sorted(l))
 
 def _zsh_get_optstrings_with_brace_expansion(info, action):
     if action.takes_args():
@@ -94,7 +94,7 @@ def _zsh_get_optstrings_with_brace_expansion(info, action):
     if len(optstrings) == 1:
         return optstrings[0]
     else:
-        return '{%s}' % ','.join(optstrings)
+        return '{%s}' % ','.join(sorted(optstrings))
 
 def _zsh_generate_subcommands_complete(info, p):
     commands = '\n    '.join(f"'{name}:{sub.get_help()}'" for name, sub in p.get_subparsers().items())

@@ -5,13 +5,13 @@ _nbfc_service() {
   _init_completion -s || return
 
   case "$prev" in
-    -c|--config-file)
+    --config-file|-c)
        COMPREPLY=();
        return 0;;
-    -s|--state-file)
+    --state-file|-s)
        COMPREPLY=();
        return 0;;
-    -e|--embedded-controller)
+    --embedded-controller|-e)
        COMPREPLY=($(compgen -W 'dummy ec_linux ec_sys_linux' -- "$cur"));
        return 0;;
   esac

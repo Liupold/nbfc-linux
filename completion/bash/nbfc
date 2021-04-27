@@ -56,10 +56,10 @@ _nbfc_restart() {
 
 _nbfc_status() {
   case "$prev" in
-    -f|--fan)
-       COMPREPLY=($(compgen -W "{0..255}" -- "$cur"));
+    --fan|-f)
+       COMPREPLY=($(compgen -W '{0..255}' -- "$cur"));
        return 0;;
-    -w|--watch)
+    --watch|-w)
        COMPREPLY=();
        return 0;;
   esac
@@ -73,10 +73,10 @@ _nbfc_status() {
 
 _nbfc_config() {
   case "$prev" in
-    -s|--set)
+    --set|-s)
        COMPREPLY=();
        return 0;;
-    -a|--apply)
+    --apply|-a)
        COMPREPLY=();
        return 0;;
   esac
@@ -90,11 +90,11 @@ _nbfc_config() {
 
 _nbfc_set() {
   case "$prev" in
-    -s|--speed)
+    --speed|-s)
        COMPREPLY=();
        return 0;;
-    -f|--fan)
-       COMPREPLY=($(compgen -W "{0..255}" -- "$cur"));
+    --fan|-f)
+       COMPREPLY=($(compgen -W '{0..255}' -- "$cur"));
        return 0;;
   esac
 

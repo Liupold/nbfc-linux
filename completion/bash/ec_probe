@@ -15,7 +15,7 @@ _ec_probe() {
   done
 
   case "$prev" in
-    -e|--embedded-controller)
+    --embedded-controller|-e)
        COMPREPLY=($(compgen -W 'ec_linux ec_sys_linux' -- "$cur"));
        return 0;;
   esac
@@ -48,7 +48,7 @@ _ec_probe_read() {
 
   case $args in
     2)
-       COMPREPLY+=($(compgen -W "{0..1..255}" -- "$cur"));
+       COMPREPLY+=($(compgen -W '{0..255..1}' -- "$cur"));
        return 0;;
   esac
 
@@ -62,10 +62,10 @@ _ec_probe_write() {
 
   case $args in
     2)
-       COMPREPLY+=($(compgen -W "{0..1..255}" -- "$cur"));
+       COMPREPLY+=($(compgen -W '{0..255..1}' -- "$cur"));
        return 0;;
     3)
-       COMPREPLY+=($(compgen -W "{0..1..255}" -- "$cur"));
+       COMPREPLY+=($(compgen -W '{0..255..1}' -- "$cur"));
        return 0;;
   esac
 
@@ -74,13 +74,13 @@ _ec_probe_write() {
 
 _ec_probe_monitor() {
   case "$prev" in
-    -i|--interval)
-       COMPREPLY=($(compgen -W "{0..255}" -- "$cur"));
+    --interval|-i)
+       COMPREPLY=($(compgen -W '{0..255}' -- "$cur"));
        return 0;;
-    -t|--timespan)
-       COMPREPLY=($(compgen -W "{0..255}" -- "$cur"));
+    --timespan|-t)
+       COMPREPLY=($(compgen -W '{0..255}' -- "$cur"));
        return 0;;
-    -r|--report)
+    --report|-r)
        COMPREPLY=();
        return 0;;
   esac

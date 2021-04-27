@@ -2,13 +2,13 @@
 
 _nbfc_service() {
   _arguments \
-    '(--help -h)'{-h,--help}'[show this help message and exit]'::'()'\
-    '(-r --readonly)'{-r,--readonly}'[Start in read-only mode]'::'()'\
-    '(--fork -f)'{-f,--fork}'[Switch process to background after sucessfully started]'::'()'\
-    '(--debug -d)'{-d,--debug}'[Enable tracing of reads and writes of the embedded controller]'::'()'\
-    '(-c --config-file)'{-c+,--config-file=}'[Use alternative config file (default /etc/nbfc/nbfc.json)]':config:'()'\
-    '(--state-file -s)'{-s+,--state-file=}'[Write state to an alternative file (default /var/run/nbfc_service.state.json)]':'state.json':'()'\
-    '(-e --embedded-controller)'{-e+,--embedded-controller=}'[Specify embedded controller to use]':EC:'(dummy ec_linux ec_sys_linux)'
+    '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'\
+    '(--readonly -r)'{--readonly,-r}'[Start in read-only mode]'::'()'\
+    '(--fork -f)'{--fork,-f}'[Switch process to background after sucessfully started]'::'()'\
+    '(--debug -d)'{--debug,-d}'[Enable tracing of reads and writes of the embedded controller]'::'()'\
+    '(--config-file -c)'{--config-file=,-c+}'[Use alternative config file (default /etc/nbfc/nbfc.json)]':config:'()'\
+    '(--state-file -s)'{--state-file=,-s+}'[Write state to an alternative file (default /var/run/nbfc_service.state.json)]':'state.json':'()'\
+    '(--embedded-controller -e)'{--embedded-controller=,-e+}'[Specify embedded controller to use]':EC:'(dummy ec_linux ec_sys_linux)'
 }
 
 _nbfc_service "$@"
