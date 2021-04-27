@@ -1,11 +1,9 @@
 #!/usr/bin/python3
 
 import sys, argparse
-from argany import *
 
-#a = argp.add_argument('-X', '--config-file')
+#from argany import *
 #a.bash_compgen = 'cd /etc/nbfc/; compgen -f -- $cur'
-#'`nbfc_service` is a C port of Hirschmans original Notebook FanControl service.'
 
 PROLOG = '''\
 NBFC\_SERVICE 1 "MARCH 2021" Notebook FanControl

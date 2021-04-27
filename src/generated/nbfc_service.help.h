@@ -1,8 +1,9 @@
-#define NBFC_SERVICE_HELP_TEXT "usage: %s [-r] [-f] [-d] [-c config] [-s state.json] [-e EC]\n"\
+#define NBFC_SERVICE_HELP_TEXT "usage: %s [-h] [-r] [-f] [-d] [-c config] [-s state.json] [-e EC]\n"\
  "\n"\
  "NoteBook FanControl service\n"\
  "\n"\
  "optional arguments:\n"\
+ "  -h, --help            show this help message and exit\n"\
  "  -r, --readonly        Start in read-only mode\n"\
  "  -f, --fork            Switch process to background after sucessfully started\n"\
  "  -d, --debug           Enable tracing of reads and writes of the embedded\n"\

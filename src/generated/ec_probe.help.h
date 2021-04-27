@@ -1,8 +1,9 @@
-#define EC_PROBE_HELP_TEXT "usage: %s [-e EC] {dump,read,write,monitor} ...\n"\
+#define EC_PROBE_HELP_TEXT "usage: %s [-h] [-e EC] {dump,read,write,monitor} ...\n"\
  "\n"\
  "Probing tool for embedded controllers\n"\
  "\n"\
  "optional arguments:\n"\
+ "  -h, --help            show this help message and exit\n"\
  "  -e EC, --embedded-controller EC\n"\
  "                        Specify embedded controller to use\n"\
  "\n"\
@@ -18,25 +19,43 @@
  "All input values are interpreted as decimal numbers by default. Hexadecimal\n"\
  "values may be entered by prefixing them with \"0x\".\n"\
  ""
-#define DUMP_HELP_TEXT "usage: %s dump\n"\
- ""
-
-#define READ_HELP_TEXT "usage: %s read REGISTER\n"\
+#define EC_PROBE_DUMP_HELP_TEXT "usage: %s [-h]\n"\
  "\n"\
- "positional arguments:\n"\
- "  REGISTER  Register source\n"\
- ""
-
-#define WRITE_HELP_TEXT "usage: %s write REGISTER VALUE\n"\
- "\n"\
- "positional arguments:\n"\
- "  REGISTER  Register destination\n"\
- "  VALUE     Value to write\n"\
- ""
-
-#define MONITOR_HELP_TEXT "usage: %s monitor [-i seconds] [-t seconds] [-r REPORT] [-c] [-d]\n"\
+ "Dump all EC registers\n"\
  "\n"\
  "optional arguments:\n"\
+ "  -h, --help  show this help message and exit\n"\
+ ""
+
+#define EC_PROBE_READ_HELP_TEXT "usage: %s [-h] REGISTER\n"\
+ "\n"\
+ "Read a byte from a EC register\n"\
+ "\n"\
+ "positional arguments:\n"\
+ "  REGISTER    Register source\n"\
+ "\n"\
+ "optional arguments:\n"\
+ "  -h, --help  show this help message and exit\n"\
+ ""
+
+#define EC_PROBE_WRITE_HELP_TEXT "usage: %s [-h] REGISTER VALUE\n"\
+ "\n"\
+ "Write a byte to a EC register\n"\
+ "\n"\
+ "positional arguments:\n"\
+ "  REGISTER    Register destination\n"\
+ "  VALUE       Value to write\n"\
+ "\n"\
+ "optional arguments:\n"\
+ "  -h, --help  show this help message and exit\n"\
+ ""
+
+#define EC_PROBE_MONITOR_HELP_TEXT "usage: %s [-h] [-i seconds] [-t seconds] [-r REPORT] [-c] [-d]\n"\
+ "\n"\
+ "Monitor all EC registers for changes\n"\
+ "\n"\
+ "optional arguments:\n"\
+ "  -h, --help            show this help message and exit\n"\
  "  -i seconds, --interval seconds\n"\
  "                        Monitored timespan\n"\
  "  -t seconds, --timespan seconds\n"\

@@ -1,142 +1,116 @@
 #!/bin/bash
 
 _nbfc() {
-  COMPREPLY=();
-  local arg0=${COMP_WORDS[1]}
-  case "$arg0" in
-    start) _nbfc_start;;
-    stop) _nbfc_stop;;
-    restart) _nbfc_restart;;
-    status) _nbfc_status;;
-    config) _nbfc_config;;
-    set) _nbfc_set;;
-    help) _nbfc_help;;
-    *) COMPREPLY+=($(compgen -W 'start stop restart status config set help' -- $cur));;
+  local cur prev words cword split args w
+  _init_completion -s || return
+
+  _count_args "" ""
+  for w in "${COMP_WORDS[@]}"; do
+    case "$w" in
+      start) _nbfc_start && return 0;;
+      stop) _nbfc_stop && return 0;;
+      restart) _nbfc_restart && return 0;;
+      status) _nbfc_status && return 0;;
+      config) _nbfc_config && return 0;;
+      set) _nbfc_set && return 0;;
+      help) _nbfc_help && return 0;;
+    esac
+  done
+
+  if [[ "$cur" = -* ]]; then
+    COMPREPLY+=($(compgen -W '-h --help' -- "$cur"))
+  fi
+
+  case $args in
+    1)
+       COMPREPLY+=($(compgen -W 'start stop restart status config set help' -- "$cur"));
+       return 0;;
   esac
 
-  local cur=${COMP_WORDS[COMP_CWORD]}
-  local prev=${COMP_WORDS[COMP_CWORD - 1]}
-
-  case "$prev" in
-    -h) ;& --help)
-      COMPREPLY+=();;
-  esac
-
-  COMPREPLY+=($(compgen -W '-h --help' -- $cur))
+  return 1
 }
 
 _nbfc_start() {
-  local cur=${COMP_WORDS[COMP_CWORD]}
-  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+  if [[ "$cur" = -* ]]; then
+    COMPREPLY+=($(compgen -W '-h --help -e --enabled -r --readonly' -- "$cur"))
+  fi
 
-  case "$prev" in
-    -h) ;& --help)
-      COMPREPLY+=();;
-    -e) ;& --enabled)
-      COMPREPLY+=();;
-    -r) ;& --readonly)
-      COMPREPLY+=();;
-  esac
-
-  COMPREPLY+=($(compgen -W '-h --help -e --enabled -r --readonly' -- $cur))
+  return 1
 }
 
 _nbfc_stop() {
-  local cur=${COMP_WORDS[COMP_CWORD]}
-  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+  if [[ "$cur" = -* ]]; then
+    COMPREPLY+=($(compgen -W '-h --help' -- "$cur"))
+  fi
 
-  case "$prev" in
-    -h) ;& --help)
-      COMPREPLY+=();;
-  esac
-
-  COMPREPLY+=($(compgen -W '-h --help' -- $cur))
+  return 1
 }
 
 _nbfc_restart() {
-  local cur=${COMP_WORDS[COMP_CWORD]}
-  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+  if [[ "$cur" = -* ]]; then
+    COMPREPLY+=($(compgen -W '-h --help -e --enabled -r --readonly' -- "$cur"))
+  fi
 
-  case "$prev" in
-    -h) ;& --help)
-      COMPREPLY+=();;
-    -e) ;& --enabled)
-      COMPREPLY+=();;
-    -r) ;& --readonly)
-      COMPREPLY+=();;
-  esac
-
-  COMPREPLY+=($(compgen -W '-h --help -e --enabled -r --readonly' -- $cur))
+  return 1
 }
 
 _nbfc_status() {
-  local cur=${COMP_WORDS[COMP_CWORD]}
-  local prev=${COMP_WORDS[COMP_CWORD - 1]}
-
   case "$prev" in
-    -h) ;& --help)
-      COMPREPLY+=();;
-    -a) ;& --all)
-      COMPREPLY+=();;
-    -s) ;& --service)
-      COMPREPLY+=();;
-    -f) ;& --fan)
-      COMPREPLY+=($(compgen -W "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 '...'" -- $cur));;
-    -w) ;& --watch)
-      COMPREPLY+=($(compgen -f -- $cur));;
+    -f|--fan)
+       COMPREPLY=($(compgen -W "{0..255}" -- "$cur"));
+       return 0;;
+    -w|--watch)
+       COMPREPLY=();
+       return 0;;
   esac
 
-  COMPREPLY+=($(compgen -W '-h --help -a --all -s --service -f --fan -w --watch' -- $cur))
+  if [[ "$cur" = -* ]]; then
+    COMPREPLY+=($(compgen -W '-h --help -a --all -s --service -f --fan -w --watch' -- "$cur"))
+  fi
+
+  return 1
 }
 
 _nbfc_config() {
-  local cur=${COMP_WORDS[COMP_CWORD]}
-  local prev=${COMP_WORDS[COMP_CWORD - 1]}
-
   case "$prev" in
-    -h) ;& --help)
-      COMPREPLY+=();;
-    -l) ;& --list)
-      COMPREPLY+=();;
-    -s) ;& --set)
-      COMPREPLY+=($(compgen -f -- $cur));;
-    -a) ;& --apply)
-      COMPREPLY+=($(compgen -f -- $cur));;
-    -r) ;& --recommend)
-      COMPREPLY+=();;
+    -s|--set)
+       COMPREPLY=();
+       return 0;;
+    -a|--apply)
+       COMPREPLY=();
+       return 0;;
   esac
 
-  COMPREPLY+=($(compgen -W '-h --help -l --list -s --set -a --apply -r --recommend' -- $cur))
+  if [[ "$cur" = -* ]]; then
+    COMPREPLY+=($(compgen -W '-h --help -l --list -s --set -a --apply -r --recommend' -- "$cur"))
+  fi
+
+  return 1
 }
 
 _nbfc_set() {
-  local cur=${COMP_WORDS[COMP_CWORD]}
-  local prev=${COMP_WORDS[COMP_CWORD - 1]}
-
   case "$prev" in
-    -h) ;& --help)
-      COMPREPLY+=();;
-    -a) ;& --auto)
-      COMPREPLY+=();;
-    -s) ;& --speed)
-      COMPREPLY+=($(compgen -f -- $cur));;
-    -f) ;& --fan)
-      COMPREPLY+=($(compgen -W "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 '...'" -- $cur));;
+    -s|--speed)
+       COMPREPLY=();
+       return 0;;
+    -f|--fan)
+       COMPREPLY=($(compgen -W "{0..255}" -- "$cur"));
+       return 0;;
   esac
 
-  COMPREPLY+=($(compgen -W '-h --help -a --auto -s --speed -f --fan' -- $cur))
+  if [[ "$cur" = -* ]]; then
+    COMPREPLY+=($(compgen -W '-h --help -a --auto -s --speed -f --fan' -- "$cur"))
+  fi
+
+  return 1
 }
 
 _nbfc_help() {
-  local cur=${COMP_WORDS[COMP_CWORD]}
-  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+  if [[ "$cur" = -* ]]; then
+    COMPREPLY+=($(compgen -W '-h --help' -- "$cur"))
+  fi
 
-  case "$prev" in
-    -h) ;& --help)
-      COMPREPLY+=();;
-  esac
-
-  COMPREPLY+=($(compgen -W '-h --help' -- $cur))
+  return 1
 }
 
 complete -F _nbfc nbfc

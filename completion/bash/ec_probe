@@ -1,85 +1,95 @@
 #!/bin/bash
 
 _ec_probe() {
-  COMPREPLY=();
-  local arg0=${COMP_WORDS[1]}
-  case "$arg0" in
-    dump) _ec_probe_dump;;
-    read) _ec_probe_read;;
-    write) _ec_probe_write;;
-    monitor) _ec_probe_monitor;;
-    *) COMPREPLY+=($(compgen -W 'dump read write monitor' -- $cur));;
-  esac
+  local cur prev words cword split args w
+  _init_completion -s || return
 
-  local cur=${COMP_WORDS[COMP_CWORD]}
-  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+  _count_args "" "-@([e]|-@(embedded-controller))"
+  for w in "${COMP_WORDS[@]}"; do
+    case "$w" in
+      dump) _ec_probe_dump && return 0;;
+      read) _ec_probe_read && return 0;;
+      write) _ec_probe_write && return 0;;
+      monitor) _ec_probe_monitor && return 0;;
+    esac
+  done
 
   case "$prev" in
-    -h) ;& --help)
-      COMPREPLY+=();;
-    -e) ;& --embedded-controller)
-      COMPREPLY+=($(compgen -W 'ec_linux ec_sys_linux' -- $cur));;
+    -e|--embedded-controller)
+       COMPREPLY=($(compgen -W 'ec_linux ec_sys_linux' -- "$cur"));
+       return 0;;
   esac
 
-  COMPREPLY+=($(compgen -W '-h --help -e --embedded-controller' -- $cur))
+  if [[ "$cur" = -* ]]; then
+    COMPREPLY+=($(compgen -W '-h --help -e --embedded-controller' -- "$cur"))
+  fi
+
+  case $args in
+    1)
+       COMPREPLY+=($(compgen -W 'dump read write monitor' -- "$cur"));
+       return 0;;
+  esac
+
+  return 1
 }
 
 _ec_probe_dump() {
-  local cur=${COMP_WORDS[COMP_CWORD]}
-  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+  if [[ "$cur" = -* ]]; then
+    COMPREPLY+=($(compgen -W '-h --help' -- "$cur"))
+  fi
 
-  case "$prev" in
-    -h) ;& --help)
-      COMPREPLY+=();;
-  esac
-
-  COMPREPLY+=($(compgen -W '-h --help' -- $cur))
+  return 1
 }
 
 _ec_probe_read() {
-  local cur=${COMP_WORDS[COMP_CWORD]}
-  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+  if [[ "$cur" = -* ]]; then
+    COMPREPLY+=($(compgen -W '-h --help' -- "$cur"))
+  fi
 
-  case "$prev" in
-    -h) ;& --help)
-      COMPREPLY+=();;
+  case $args in
+    2)
+       COMPREPLY+=($(compgen -W "{0..1..255}" -- "$cur"));
+       return 0;;
   esac
 
-  COMPREPLY+=($(compgen -W '-h --help' -- $cur))
+  return 1
 }
 
 _ec_probe_write() {
-  local cur=${COMP_WORDS[COMP_CWORD]}
-  local prev=${COMP_WORDS[COMP_CWORD - 1]}
+  if [[ "$cur" = -* ]]; then
+    COMPREPLY+=($(compgen -W '-h --help' -- "$cur"))
+  fi
 
-  case "$prev" in
-    -h) ;& --help)
-      COMPREPLY+=();;
+  case $args in
+    2)
+       COMPREPLY+=($(compgen -W "{0..1..255}" -- "$cur"));
+       return 0;;
+    3)
+       COMPREPLY+=($(compgen -W "{0..1..255}" -- "$cur"));
+       return 0;;
   esac
 
-  COMPREPLY+=($(compgen -W '-h --help' -- $cur))
+  return 1
 }
 
 _ec_probe_monitor() {
-  local cur=${COMP_WORDS[COMP_CWORD]}
-  local prev=${COMP_WORDS[COMP_CWORD - 1]}
-
   case "$prev" in
-    -h) ;& --help)
-      COMPREPLY+=();;
-    -i) ;& --interval)
-      COMPREPLY+=($(compgen -W "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 '...'" -- $cur));;
-    -t) ;& --timespan)
-      COMPREPLY+=($(compgen -W "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 '...'" -- $cur));;
-    -r) ;& --report)
-      COMPREPLY+=($(compgen -f -- $cur));;
-    -c) ;& --clearly)
-      COMPREPLY+=();;
-    -d) ;& --decimal)
-      COMPREPLY+=();;
+    -i|--interval)
+       COMPREPLY=($(compgen -W "{0..255}" -- "$cur"));
+       return 0;;
+    -t|--timespan)
+       COMPREPLY=($(compgen -W "{0..255}" -- "$cur"));
+       return 0;;
+    -r|--report)
+       COMPREPLY=();
+       return 0;;
   esac
 
-  COMPREPLY+=($(compgen -W '-h --help -i --interval -t --timespan -r --report -c --clearly -d --decimal' -- $cur))
+  if [[ "$cur" = -* ]]; then
+    COMPREPLY+=($(compgen -W '-h --help -i --interval -t --timespan -r --report -c --clearly -d --decimal' -- "$cur"))
+  fi
+
+  return 1
 }
 
 complete -F _ec_probe ec_probe

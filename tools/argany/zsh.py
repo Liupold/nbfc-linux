@@ -1,6 +1,6 @@
 #!/usr/bin/python3 -B
 
-import shell, utils
+import argparse, shell, utils, sys
 
 class ZshCompleter(shell.ShellCompleter):
     def none(self):
@@ -17,6 +17,9 @@ class ZshCompleter(shell.ShellCompleter):
             return '_directories'
         else:
             return shell.escape('_directories -G '+glob_pattern)
+
+    def variable(self):
+        return '_vars'
 
     def command(self):
         return '_command_names'
@@ -42,12 +45,20 @@ class ZshCompleter(shell.ShellCompleter):
     def choices(self, choices):
         return shell.escape("(%s)" % (' '.join(shell.escape(str(c)) for c in choices)))
 
+    def int(self, *range):
+        return (
+            "'({{0..255}})'",
+            "'({{0..{1}}})'",
+            "'({{{0}..{1}}})'",
+            "'({{{0}..{2}..{1}}})'"
+        )[len(range)].format(*range)
+
 _zsh_complete = ZshCompleter().complete
 
-def _zsh_complete_action(p, action):
+def _zsh_complete_action(info, p, action):
     if action.option_strings:
         argname = ''
-        if shell.action_takes_args(action):
+        if action.takes_args():
             if action.metavar:
                 argname = shell.escape(action.metavar)
             elif action.type is not None:
@@ -56,24 +67,26 @@ def _zsh_complete_action(p, action):
                 argname = shell.escape(action.dest)
 
         return "'(%s)'%s%s:%s:%s" % (
-            _zsh_get_exclusive_options(p, action),
-            _zsh_get_optstrings_with_brace_expansion(action),
-            shell.escape('[%s]' % action.help),
+            _zsh_get_exclusive_options(info, p, action),
+            _zsh_get_optstrings_with_brace_expansion(info, action),
+            shell.escape('[%s]' % action.help) if action.help else '',
             argname,
             _zsh_complete(*shell.action_get_completer(action)))
+    elif isinstance(action, argparse._SubParsersAction):
+        return "':command:%s'" % shell.make_subparser_identifier(p.prog)
     else:
         return ":%s:%s" % (
-            shell.escape(action.help),
+            shell.escape(action.help) if action.help else '',
             _zsh_complete(*shell.action_get_completer(action)))
 
-def _zsh_get_exclusive_options(p, action):
+def _zsh_get_exclusive_options(info, p, action):
     l = set(action.option_strings)
-    for a in utils.get_exclusive_actions(p.parser, action):
-        l.add(*a.option_strings)
+    for a in info.get_conflicting_options(action):
+        l.update(a.option_strings)
     return ' '.join(l)
 
-def _zsh_get_optstrings_with_brace_expansion(action):
-    if shell.action_takes_args(action):
+def _zsh_get_optstrings_with_brace_expansion(info, action):
+    if action.takes_args():
         optstrings = [o+'+' if len(o) == 2 else o+'=' for o in action.option_strings]
     else:
         optstrings = action.option_strings
@@ -83,55 +96,59 @@ def _zsh_get_optstrings_with_brace_expansion(action):
     else:
         return '{%s}' % ','.join(optstrings)
 
-def _zsh_generate_subcommands_complete(p, funcname):
-    commands = '\n    '.join(f"'{name}:{shell.get_help(sub)}'" for name, sub in p.subparsers.items())
+def _zsh_generate_subcommands_complete(info, p):
+    commands = '\n    '.join(f"'{name}:{sub.get_help()}'" for name, sub in p.get_subparsers().items())
 
     return f'''\
-{funcname}() {{
-  local commands; commands=(
+{shell.make_subparser_identifier(p.prog)}() {{
+  local commands=(
     {commands}
   )
-  _describe -t commands '{p.parser.prog} command' commands "$@"
+  _describe -t commands '{p.prog} command' commands "$@"
 }}\n\n'''
 
-def _zsh_generate_arguments(p, funcname):
-    r =  '  _arguments \\\n'
-    for a in p.actions:
-        r += '    %s \\\n' % _zsh_complete_action(p, a)
-    if p.subparsers:
-        r += f"    '1:command:{funcname}_subcommands' \\\n"
-        r +=  "    '*::arg:->args' \\\n"
-    r = r[:-3] + '\n\n'
-    return r
+def _zsh_generate_arguments(info, p, funcname):
+    args = []
 
-def _zsh_generate_parser_func(p, funcname):
+    for a in p._actions:
+        args.append(_zsh_complete_action(info, p, a))
+    if len(p.get_subparsers()):
+        args.append("'*::arg:->args'")
+
+    if len(args):
+        return '  _arguments \\\n    %s\n' % '\\\n    '.join(args)
+
+    return ''
+
+def _zsh_generate_parser_func(info, p, funcname):
     PS = '' # P.S. I love you
 
     r =  f'{funcname}() {{\n'
-    r += _zsh_generate_arguments(p, funcname)
+    r += _zsh_generate_arguments(info, p, funcname)
 
-    if p.subparsers:
-        PS += _zsh_generate_subcommands_complete(p, funcname+'_subcommands')
+    subparsers = p.get_subparsers()
+    if len(subparsers):
+        PS += _zsh_generate_subcommands_complete(info, p)
 
-        r += '  case $state in\n'
-        r += '    (args)\n'
-        r += '      case $line[1] in\n'
-        for name in p.subparsers:
+        r += '  for w in $line; do\n'
+        r += '    case $w in\n'
+        for name in subparsers:
             f = shell.make_identifier(f'_{funcname}_{name}')
-            PS += _zsh_generate_parser_func(p.subparsers[name], f)
-            r += f'        ({name}) {f};;\n'
-        r += '      esac\n'
-        r += '  esac\n'
+            PS += _zsh_generate_parser_func(info, subparsers[name], f)
+            r += f'      ({name}) {f}; break;;\n'
+        r += '    esac\n'
+        r += '  done\n'
     r += '}\n\n'
 
     return r + PS
 
 def generate_completion(p, prog=None):
     if prog is None:
-        prog = p.parser.prog
+        prog = p.prog
 
+    info = utils.ArgparseInfo.create(p)
     r  = f'#compdef {prog}\n\n'
-    r += _zsh_generate_parser_func(p, '_'+prog)
-    r += f'\n_{prog} "$@"'
+    r += _zsh_generate_parser_func(info, p, '_'+shell.make_identifier(prog)).rstrip()
+    r += f'\n\n_%s "$@"' % shell.make_identifier(prog)
     return r
 

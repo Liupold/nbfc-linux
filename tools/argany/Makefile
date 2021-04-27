@@ -1,6 +1,4 @@
-build: test/argany-test.zsh \
-	test/argany-test.bash \
-	test/argany-test.fish
+build: test
 
 install: build
 	mkdir -p $(DESTDIR)/usr/bin
@@ -21,14 +19,9 @@ uninstall:
 clean:
 	rm -rf test
 
-test/:
-	mkdir -p test/
-
-test/argany-test.zsh: test/ ./argany.py bash.py fish.py zsh.py
-	./argany.py zsh argany-test.py > test/argany-test.zsh
-
-test/argany-test.bash: test/ ./argany.py bash.py fish.py zsh.py
-	./argany.py bash argany-test.py > test/argany-test.bash
-
-test/argany-test.fish: test/ ./argany.py bash.py fish.py zsh.py
-	./argany.py fish argany-test.py > test/argany-test.fish
+test: ./argany.py bash.py fish.py zsh.py
+	mkdir -p test
+	./argany.py \
+	zsh argany-test.py -o test/argany-test.zsh   ';' \
+	bash argany-test.py -o test/argany-test.bash ';' \
+	fish argany-test.py -o test/argany-test.fish ';'
