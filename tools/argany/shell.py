@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import sys, re, argparse
+import sys, re, argparse, collections
 
 def make_identifier(s):
     ''' Make `s` a valid shell identifier '''
@@ -28,21 +28,17 @@ def action_get_completer(action):
         pass # TODO!
 
     if action.choices:
-        if isinstance(action.choices, (list, tuple)):
+        if isinstance(action.choices, (list, tuple, set, dict)):
             return ('choices', action.choices)
 
-        if isinstance(action.choices, dict):
-            return ('choices', list(action.choices.keys()))
-
         if isinstance(action.choices, range):
-            return ('int', action.choices.start, action.choices.step, action.choices.stop)
+            return ('range', action.choices)
 
         raise Exception("Unknown type for choices: %r" % type(action.choices))
 
     if action.takes_args():
-        if action.type is int:
-            return ('int',)
-        return ('files',)
+        if action.type not in (int, float):
+            return ('files',)
 
     return ('none',)
 
@@ -61,12 +57,49 @@ class ShellCompleter:
     def none(self):
         return ''
 
-    def signal(self):
-        return self.fallback('signal', 'choices', ['SIGINT', 'SIGTERM', 'SIGKILL'])
+    def signal(self, prefix=''):
+        ''' '''
 
-    def int(self, *_range):
-        if not _range: _range = (20,)
-        return self.fallback('int', 'choices', list(range(*_range)[0:20]) + ['...'])
+        SIG = prefix
+        signals = collections.OrderedDict([
+            (SIG+'ABRT',   'Process abort signal'),
+            (SIG+'ALRM',   'Alarm clock'),
+            (SIG+'BUS',    'Access to an undefined portion of a memory object'),
+            (SIG+'CHLD',   'Child process terminated, stopped, or continued'),
+            (SIG+'CONT',   'Continue executing, if stopped'),
+            (SIG+'FPE',    'Erroneous arithmetic operation'),
+            (SIG+'HUP',    'Hangup'),
+            (SIG+'ILL',    'Illegal instruction'),
+            (SIG+'INT',    'Terminal interrupt signal'),
+            (SIG+'KILL',   'Kill (cannot be caught or ignored)'),
+            (SIG+'PIPE',   'Write on a pipe with no one to read it'),
+            (SIG+'QUIT',   'Terminal quit signal'),
+            (SIG+'SEGV',   'Invalid memory reference'),
+            (SIG+'STOP',   'Stop executing (cannot be caught or ignored)'),
+            (SIG+'TERM',   'Termination signal'),
+            (SIG+'TSTP',   'Terminal stop signal'),
+            (SIG+'TTIN',   'Background process attempting read'),
+            (SIG+'TTOU',   'Background process attempting write'),
+            (SIG+'USR1',   'User-defined signal 1'),
+            (SIG+'USR2',   'User-defined signal 2'),
+            (SIG+'POLL',   'Pollable event'),
+            (SIG+'PROF',   'Profiling timer expired'),
+            (SIG+'SYS',    'Bad system call'),
+            (SIG+'TRAP',   'Trace/breakpoint trap'),
+            (SIG+'XFSZ',   'File size limit exceeded'),
+            (SIG+'VTALRM', 'Virtual timer expired'),
+            (SIG+'XCPU',   'CPU time limit exceeded'),
+        ])
+
+        return self.complete('choices', signals)
+
+    def range(self, _range):
+        l = list(_range)
+
+        if len(l) > 32:
+            l = l[0:16] + ['...'] + l[-32:]
+
+        return self.complete('choices', l)
 
     def directory(self, glob_pattern=None):
         return self.fallback('directory', 'file', glob_pattern)

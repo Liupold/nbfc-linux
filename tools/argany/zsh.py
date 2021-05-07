@@ -1,4 +1,4 @@
-#!/usr/bin/python3 -B
+#!/usr/bin/python3
 
 import argparse, shell, utils, sys
 
@@ -30,9 +30,6 @@ class ZshCompleter(shell.ShellCompleter):
     def group(self):
         return '_groups'
 
-    def signal(self):
-        return '_signals'
-
     def hostname(self):
         return '_hosts'
 
@@ -43,15 +40,19 @@ class ZshCompleter(shell.ShellCompleter):
         return '_pids'
 
     def choices(self, choices):
-        return shell.escape("(%s)" % (' '.join(shell.escape(str(c)) for c in choices)))
+        if hasattr(choices, 'items'):
+            return shell.escape('((%s))' % ' '.join(
+                shell.escape('%s\\:%s' % (str(val), desc)) for val, desc in choices.items()
+            ))
+        else:
+            return shell.escape("(%s)" % (' '.join(shell.escape(str(c)) for c in choices)))
 
-    def int(self, *range):
-        return (
-            "'({{0..255}})'",
-            "'({{0..{1}}})'",
-            "'({{{0}..{1}}})'",
-            "'({{{0}..{2}..{1}}})'"
-        )[len(range)].format(*range)
+    def range(self, range):
+        if range.step == 1:
+            return f"'({{{range.start}..{range.stop}}})'"
+        else:
+            return f"'({{{range.start}..{range.stop}..{range.step}}})'"
+
 
 _zsh_complete = ZshCompleter().complete
 

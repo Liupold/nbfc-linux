@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import argparse
+import sys, argparse
 
 def action_complete(self, action, *a):
     setattr(self, 'completer', (action, *a))
@@ -47,6 +47,14 @@ def action_requires_args(action):
         argparse._ExtendAction) )
 
 argparse.Action.requires_args = action_requires_args
+
+def action_get_short_long_options(action):
+    r = ([], [])
+    for s in action.option_strings:
+        r[int(s.startswith('--'))].append(s)
+    return r
+
+argparse.Action.get_short_long_options = action_get_short_long_options
 
 def add_help_to_subparsers(parser):
     ''' Adds `.help` to the subparsers of parser '''
@@ -199,7 +207,6 @@ class ObjAttrRemove:
     def restore(self):
         setattr(self.obj, self.key, self.value)
 
-import sys
 class Actions(list):
     def apply(self):
         for e in self:
@@ -209,7 +216,7 @@ class Actions(list):
         for e in self:
             e.restore()
 
-    def prin(self):
+    def print(self):
         for e in self:
             print(e.key, e.value, file=sys.stderr)
 

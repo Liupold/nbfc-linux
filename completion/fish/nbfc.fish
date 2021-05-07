@@ -17,7 +17,7 @@ complete -c nbfc -n '__fish_seen_subcommand_from restart' -s r -l readonly -d 'R
 complete -c nbfc -n '__fish_seen_subcommand_from status' -s h -l help -d 'show this help message and exit'
 complete -c nbfc -n 'not __fish_contains_opt fan service -s f -s s' -n '__fish_seen_subcommand_from status' -s a -l all -d 'Show service and fan status (default)'
 complete -c nbfc -n 'not __fish_contains_opt all fan -s a -s f' -n '__fish_seen_subcommand_from status' -s s -l service -d 'Show service status'
-complete -c nbfc -n 'not __fish_contains_opt all service -s a -s s' -n '__fish_seen_subcommand_from status' -s f -l fan -d 'Show fan status' -r -f -a '(seq 0 255)'
+complete -c nbfc -n 'not __fish_contains_opt all service -s a -s s' -n '__fish_seen_subcommand_from status' -s f -l fan -d 'Show fan status' -r
 complete -c nbfc -n '__fish_seen_subcommand_from status' -s w -l watch -d 'Show status periodically' -r
 complete -c nbfc -n '__fish_seen_subcommand_from config' -s h -l help -d 'show this help message and exit'
 complete -c nbfc -n 'not __fish_contains_opt apply recommend set -s a -s r -s s' -n '__fish_seen_subcommand_from config' -s l -l list -d 'List all available configs (default)'
@@ -27,6 +27,6 @@ complete -c nbfc -n 'not __fish_contains_opt apply list set -s a -s l -s s' -n '
 complete -c nbfc -n '__fish_seen_subcommand_from set' -s h -l help -d 'show this help message and exit'
 complete -c nbfc -n 'not __fish_contains_opt speed -s s' -n '__fish_seen_subcommand_from set' -s a -l auto -d "Set fan speed to 'auto'"
 complete -c nbfc -n 'not __fish_contains_opt auto -s a' -n '__fish_seen_subcommand_from set' -s s -l speed -d 'Set fan speed to <value>' -r
-complete -c nbfc -n '__fish_seen_subcommand_from set' -s f -l fan -d 'Fan index (zero based)' -r -f -a '(seq 0 255)'
+complete -c nbfc -n '__fish_seen_subcommand_from set' -s f -l fan -d 'Fan index (zero based)' -r
 complete -c nbfc -n '__fish_seen_subcommand_from help' -s h -l help -d 'show this help message and exit'
 

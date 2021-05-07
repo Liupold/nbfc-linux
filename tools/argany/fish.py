@@ -1,53 +1,54 @@
-#!/usr/bin/python3 -B
+#!/usr/bin/python3
 
 import sys, shell, utils
 
 class FishCompleter(shell.ShellCompleter):
     def none(self):
-        return None
+        return ''
 
     def choices(self, choices):
-        return shell.escape(' '.join(shell.escape(str(c)) for c in choices))
+        return '-f -a ' + shell.escape(' '.join(shell.escape(str(c)) for c in choices))
 
-    #def signal(self):
-    #    return "'(__fish_make_completion_signals)'"
+    def file(self, glob_pattern=None):
+        if glob_pattern:
+            print("Warning, glob_pattern `%s' ignored\n" % glob_pattern, file=sys.stderr)
+        return '-F'
 
     def directory(self, glob_pattern=None):
         if glob_pattern:
-            return "'(__fish_complete_directories %s)'" % shell.escape(glob_pattern)
-        return "'(__fish_complete_directories)'"
+            return "-f -a '(__fish_complete_directories %s)'" % shell.escape(glob_pattern)
+        return "-f -a '(__fish_complete_directories)'"
 
     def hostname(self):
-        return "'(__fish_print_hostnames)'"
+        return "-f -a '(__fish_print_hostnames)'"
 
     def process(self):
-        return "'(__fish_complete_proc)'"
+        return "-f -a '(__fish_complete_proc)'"
 
     def command(self):
-        return "'(__fish_complete_command)'"
+        return "-f -a '(__fish_complete_command)'"
 
     def service(self):
-        return "'(__fish_systemctl_services)'"
+        return "-f -a '(__fish_systemctl_services)'"
 
     def variable(self):
-        return "'(set -n)'"
+        return "-f -a '(set -n)'"
 
     def user(self):
-        return "'(__fish_complete_users)'"
+        return "-f -a '(__fish_complete_users)'"
 
     def pid(self):
-        return "'(__fish_complete_pids)'"
+        return "-f -a '(__fish_complete_pids)'"
 
     def group(self):
-        return "'(__fish_complete_groups)'"
+        return "-f -a '(__fish_complete_groups)'"
 
-    def int(self, *range):
-        return "'(seq %s)'" % ((
-            '0 255',
-            '0 %d',
-            '%d %d',
-            '%d %d %d'
-        )[len(range)] % range)
+    def range(self, range):
+        if range.step == 1:
+            return f"-f -a '(seq {range.start} {range.stop})'"
+        else:
+            return f"-f -a '(seq {range.start} {range.step} {range.stop})'"
+
 
 _fish_complete = FishCompleter().complete
 
@@ -85,11 +86,9 @@ def _fish_complete_action(info, p, action, prog, subcommand=None):
     if action.requires_args():
         r += ' -r'
 
-    comp_action =_fish_complete(*shell.action_get_completer(action))
-    if comp_action:
-        r += ' -f -a %s' % comp_action
+    r += ' ' + _fish_complete(*shell.action_get_completer(action))
 
-    return r
+    return r.rstrip()
 
 def _fish_generate_subcommands_complete(info, p, prog):
     r = ''

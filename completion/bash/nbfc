@@ -17,13 +17,11 @@ _nbfc() {
     esac
   done
 
-  if [[ "$cur" = -* ]]; then
-    COMPREPLY+=($(compgen -W '-h --help' -- "$cur"))
-  fi
+  [[ "$cur" = -* ]] && COMPREPLY+=($(compgen -W '-h --help' -- "$cur"))
 
   case $args in
     1)
-       COMPREPLY+=($(compgen -W 'start stop restart status config set help' -- "$cur"));
+       COMPREPLY+=($(compgen -W 'start stop restart status config set help' -- "$cur"))
        return 0;;
   esac
 
@@ -31,25 +29,19 @@ _nbfc() {
 }
 
 _nbfc_start() {
-  if [[ "$cur" = -* ]]; then
-    COMPREPLY+=($(compgen -W '-h --help -e --enabled -r --readonly' -- "$cur"))
-  fi
+  [[ "$cur" = -* ]] && COMPREPLY+=($(compgen -W '-h --help -e --enabled -r --readonly' -- "$cur"))
 
   return 1
 }
 
 _nbfc_stop() {
-  if [[ "$cur" = -* ]]; then
-    COMPREPLY+=($(compgen -W '-h --help' -- "$cur"))
-  fi
+  [[ "$cur" = -* ]] && COMPREPLY+=($(compgen -W '-h --help' -- "$cur"))
 
   return 1
 }
 
 _nbfc_restart() {
-  if [[ "$cur" = -* ]]; then
-    COMPREPLY+=($(compgen -W '-h --help -e --enabled -r --readonly' -- "$cur"))
-  fi
+  [[ "$cur" = -* ]] && COMPREPLY+=($(compgen -W '-h --help -e --enabled -r --readonly' -- "$cur"))
 
   return 1
 }
@@ -57,16 +49,14 @@ _nbfc_restart() {
 _nbfc_status() {
   case "$prev" in
     --fan|-f)
-       COMPREPLY=($(compgen -W '{0..255}' -- "$cur"));
+       
        return 0;;
     --watch|-w)
-       COMPREPLY=();
+       
        return 0;;
   esac
 
-  if [[ "$cur" = -* ]]; then
-    COMPREPLY+=($(compgen -W '-h --help -a --all -s --service -f --fan -w --watch' -- "$cur"))
-  fi
+  [[ "$cur" = -* ]] && COMPREPLY+=($(compgen -W '-h --help -a --all -s --service -f --fan -w --watch' -- "$cur"))
 
   return 1
 }
@@ -74,16 +64,14 @@ _nbfc_status() {
 _nbfc_config() {
   case "$prev" in
     --set|-s)
-       COMPREPLY=();
+       
        return 0;;
     --apply|-a)
-       COMPREPLY=();
+       
        return 0;;
   esac
 
-  if [[ "$cur" = -* ]]; then
-    COMPREPLY+=($(compgen -W '-h --help -l --list -s --set -a --apply -r --recommend' -- "$cur"))
-  fi
+  [[ "$cur" = -* ]] && COMPREPLY+=($(compgen -W '-h --help -l --list -s --set -a --apply -r --recommend' -- "$cur"))
 
   return 1
 }
@@ -91,24 +79,20 @@ _nbfc_config() {
 _nbfc_set() {
   case "$prev" in
     --speed|-s)
-       COMPREPLY=();
+       
        return 0;;
     --fan|-f)
-       COMPREPLY=($(compgen -W '{0..255}' -- "$cur"));
+       
        return 0;;
   esac
 
-  if [[ "$cur" = -* ]]; then
-    COMPREPLY+=($(compgen -W '-h --help -a --auto -s --speed -f --fan' -- "$cur"))
-  fi
+  [[ "$cur" = -* ]] && COMPREPLY+=($(compgen -W '-h --help -a --auto -s --speed -f --fan' -- "$cur"))
 
   return 1
 }
 
 _nbfc_help() {
-  if [[ "$cur" = -* ]]; then
-    COMPREPLY+=($(compgen -W '-h --help' -- "$cur"))
-  fi
+  [[ "$cur" = -* ]] && COMPREPLY+=($(compgen -W '-h --help' -- "$cur"))
 
   return 1
 }

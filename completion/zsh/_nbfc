@@ -55,7 +55,7 @@ _nbfc_status() {
     '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'\
     '(--all --fan --service -a -f -s)'{--all,-a}'[Show service and fan status (default)]'::'()'\
     '(--all --fan --service -a -f -s)'{--service,-s}'[Show service status]'::'()'\
-    '(--all --fan --service -a -f -s)'{--fan=,-f+}'[Show fan status]':'FAN INDEX':'({0..255})'\
+    '(--all --fan --service -a -f -s)'{--fan=,-f+}'[Show fan status]':'FAN INDEX':'()'\
     '(--watch -w)'{--watch=,-w+}'[Show status periodically]':SECONDS:'()'
 }
 
@@ -73,7 +73,7 @@ _nbfc_set() {
     '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'\
     '(--auto --speed -a -s)'{--auto,-a}"[Set fan speed to 'auto']"::'()'\
     '(--auto --speed -a -s)'{--speed=,-s+}'[Set fan speed to <value>]':PERCENT:'()'\
-    '(--fan -f)'{--fan=,-f+}'[Fan index (zero based)]':'FAN INDEX':'({0..255})'
+    '(--fan -f)'{--fan=,-f+}'[Fan index (zero based)]':'FAN INDEX':'()'
 }
 
 _nbfc_help() {

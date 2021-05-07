@@ -36,7 +36,7 @@ def generate(opts):
     utils.add_help_to_subparsers(parser)
     actions = utils.remove_help_actions(parser)
     actions.apply()
-    actions.prin()
+    #actions.print()
 
     try:
         r = {

@@ -22,6 +22,6 @@ clean:
 test: ./argany.py bash.py fish.py zsh.py
 	mkdir -p test
 	./argany.py \
-	zsh argany-test.py -o test/argany-test.zsh   ';' \
+	zsh  argany-test.py  -o test/argany-test.zsh ';' \
 	bash argany-test.py -o test/argany-test.bash ';' \
 	fish argany-test.py -o test/argany-test.fish ';'
