@@ -1,7 +1,6 @@
 build: \
 	etc/nbfc/configs \
 	ec_probe.md nbfc.md nbfc_service.md nbfc_service.json.md \
-	doc/ec_probe.1 doc/nbfc.1 doc/nbfc_service.json.5 doc/nbfc_service.1 \
 	src/nbfc_service src/ec_probe
 
 install: build
@@ -93,14 +92,11 @@ completion: .force
 # Markdown ====================================================================
 # =============================================================================
 
-ec_probe.md: ./tools/argany/ec_probe.py
-	./tools/argany/argany.py markdown ./tools/ec_probe.py > ec_probe.md
-
-nbfc.md: ./tools/argany/nbfc.argany.py
-	./tools/argany/argany.py markdown nbfc.py > nbfc.md
-
-nbfc_service.md: ./tools/argany/nbfc_service.py
-	./tools/argany/argany.py markdown ./tools/nbfc_service.py > nbfc_service.md
+markdown: .force
+	./tools/argany/argany.py \
+		markdown ./tools/ec_probe.py     -o ec_probe.md ';' \
+	  markdown ./tools/nbfc_service.py -o nbfc_service.md ';' \
+	  markdown nbfc.py -o nbfc.md
 
 nbfc_service.json.md: ./tools/config_to_md.py ./tools/config.json
 	./tools/config_to_md.py  > nbfc_service.json.md
@@ -109,19 +105,11 @@ nbfc_service.json.md: ./tools/config_to_md.py ./tools/config.json
 # Manual pages ================================================================
 # =============================================================================
 
-doc/:
+doc: .force
 	mkdir -p doc
-
-doc/ec_probe.1: doc/ ec_probe.md
 	go-md2man < ec_probe.md > doc/ec_probe.1
-
-doc/nbfc.1: doc/ nbfc.md
 	go-md2man < nbfc.md > doc/nbfc.1
-
-doc/nbfc_service.json.5: doc/ nbfc_service.json.md
 	go-md2man < nbfc_service.json.md > doc/nbfc_service.json.5
-
-doc/nbfc_service.1: doc/ nbfc_service.md
 	go-md2man < nbfc_service.md > doc/nbfc_service.1
 
 .force:
