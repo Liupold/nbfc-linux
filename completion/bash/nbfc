@@ -64,10 +64,10 @@ _nbfc_status() {
 _nbfc_config() {
   case "$prev" in
     --set|-s)
-       
+       COMPREPLY=($(compgen -f -- "$cur"))
        return 0;;
     --apply|-a)
-       
+       COMPREPLY=($(compgen -f -- "$cur"))
        return 0;;
   esac
 

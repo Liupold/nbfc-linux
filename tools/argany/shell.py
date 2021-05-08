@@ -38,7 +38,7 @@ def action_get_completer(action):
 
     if action.takes_args():
         if action.type not in (int, float):
-            return ('files',)
+            return ('file',)
 
     return ('none',)
 

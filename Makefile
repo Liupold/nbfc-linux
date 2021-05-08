@@ -1,8 +1,5 @@
 build: \
 	etc/nbfc/configs \
-	completion/zsh/_ec_probe completion/zsh/_nbfc completion/zsh/_nbfc_service \
-	completion/bash/ec_probe completion/bash/nbfc completion/bash/nbfc_service \
-	completion/fish/ec_probe.fish completion/fish/nbfc.fish completion/fish/nbfc_service.fish \
 	ec_probe.md nbfc.md nbfc_service.md nbfc_service.json.md \
 	doc/ec_probe.1 doc/nbfc.1 doc/nbfc_service.json.5 doc/nbfc_service.1 \
 	src/nbfc_service src/ec_probe
@@ -76,41 +73,21 @@ etc/nbfc/configs:
 # Completion ==================================================================
 # =============================================================================
 
-completion/bash/:
-	mkdir -p completion/bash
-
-completion/fish/:
-	mkdir -p completion/fish
-
-completion/zsh/:
-	mkdir -p completion/zsh
-
-completion/zsh/_nbfc: completion/zsh/
-	./tools/argany/argany.py zsh ./nbfc.py > completion/zsh/_nbfc
-
-completion/zsh/_nbfc_service: completion/zsh/
-	./tools/argany/argany.py zsh ./tools/argany/nbfc_service.py > completion/zsh/_nbfc_service
-
-completion/zsh/_ec_probe: completion/zsh/
-	./tools/argany/argany.py zsh ./tools/argany/ec_probe.py > completion/zsh/_ec_probe
-
-completion/bash/nbfc: completion/bash/
-	./tools/argany/argany.py bash ./nbfc.py > completion/bash/nbfc
-
-completion/bash/nbfc_service: completion/bash/
-	./tools/argany/argany.py bash ./tools/argany/nbfc_service.py > completion/bash/nbfc_service
-
-completion/bash/ec_probe: completion/bash/
-	./tools/argany/argany.py bash ./tools/argany/ec_probe.py > completion/bash/ec_probe
-
-completion/fish/nbfc.fish: completion/fish/
-	./tools/argany/argany.py fish ./nbfc.py > completion/fish/nbfc.fish
-
-completion/fish/nbfc_service.fish: completion/fish/
-	./tools/argany/argany.py fish ./tools/argany/nbfc_service.py > completion/fish/nbfc_service.fish
-
-completion/fish/ec_probe.fish: completion/fish/
-	./tools/argany/argany.py fish ./tools/argany/ec_probe.py > completion/fish/ec_probe.fish
+completion: .force
+	mkdir -p completion/bash completion/fish completion/zsh
+	
+	./tools/argany/argany.py \
+		zsh  ./nbfc.py -o completion/zsh/_nbfc ';' \
+	  fish ./nbfc.py -o completion/fish/nbfc.fish ';' \
+	  bash ./nbfc.py -o completion/bash/nbfc ';' \
+		\
+	  zsh  ./tools/argany/nbfc_service.py -o completion/zsh/_nbfc_service ';' \
+	  fish ./tools/argany/nbfc_service.py -o completion/fish/nbfc_service.fish ';' \
+	  bash ./tools/argany/nbfc_service.py -o completion/bash/nbfc_service ';' \
+		\
+	  zsh  ./tools/argany/ec_probe.py -o completion/zsh/_ec_probe ';' \
+	  fish ./tools/argany/ec_probe.py -o completion/fish/ec_probe.fish ';' \
+	  bash ./tools/argany/ec_probe.py -o completion/bash/ec_probe
 
 # =============================================================================
 # Markdown ====================================================================
@@ -147,3 +124,5 @@ doc/nbfc_service.json.5: doc/ nbfc_service.json.md
 doc/nbfc_service.1: doc/ nbfc_service.md
 	go-md2man < nbfc_service.md > doc/nbfc_service.1
 
+.force:
+	# force building targets

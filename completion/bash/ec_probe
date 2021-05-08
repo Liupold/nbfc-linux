@@ -73,7 +73,7 @@ _ec_probe_monitor() {
        
        return 0;;
     --report|-r)
-       
+       COMPREPLY=($(compgen -f -- "$cur"))
        return 0;;
   esac
 

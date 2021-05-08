@@ -49,7 +49,7 @@ _ec_probe_monitor() {
     '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'\
     '(--interval -i)'{--interval=,-i+}'[Monitored timespan]':seconds:'()'\
     '(--timespan -t)'{--timespan=,-t+}'[Set poll intervall]':seconds:'()'\
-    '(--report -r)'{--report=,-r+}'[Save all readings as a CSV file]':report:'()'\
+    '(--report -r)'{--report=,-r+}'[Save all readings as a CSV file]':report:_files\
     '(--clearly -c)'{--clearly,-c}'[Blanks out consecutive duplicate readings]'::'()'\
     '(--decimal -d)'{--decimal,-d}'[Output readings in decimal format instead of hexadecimal format]'::'()'
 }
