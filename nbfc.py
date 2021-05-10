@@ -102,6 +102,10 @@ class NbfcService:
         except:
             return {}
 
+    def set_config(self):
+        with open(self.CONFIG_FILE, 'w') as fh:
+            return json.dump(fh)
+
 service = NbfcService()
 
 def config(opts):
