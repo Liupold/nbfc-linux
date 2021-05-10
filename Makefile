@@ -1,14 +1,11 @@
-build: \
-	etc/nbfc/configs \
-	ec_probe.md nbfc.md nbfc_service.md nbfc_service.json.md \
-	src/nbfc_service src/ec_probe
+build: src/nbfc_service src/ec_probe
 
 install: build
 	# Binaries
 	mkdir -p $(DESTDIR)/usr/bin
-	install nbfc.py          $(DESTDIR)/usr/bin/nbfc
-	install src/nbfc_service $(DESTDIR)/usr/bin/nbfc_service
-	install src/ec_probe     $(DESTDIR)/usr/bin/ec_probe
+	install nbfc.py           $(DESTDIR)/usr/bin/nbfc
+	install src/nbfc_service  $(DESTDIR)/usr/bin/nbfc_service
+	install src/ec_probe      $(DESTDIR)/usr/bin/ec_probe
 	
 	# /etc/systemd/system
 	mkdir -p $(DESTDIR)/etc/systemd/system
@@ -18,12 +15,13 @@ install: build
 	mkdir -p $(DESTDIR)/etc/nbfc
 	cp -r etc/nbfc/configs $(DESTDIR)/etc/nbfc/
 	
-	# Doc
-	mkdir -p $(DESTDIR)/usr/share/man/man{1,5}
-	cp doc/ec_probe.1          $(DESTDIR)/usr/share/man/man1
-	cp doc/nbfc.1              $(DESTDIR)/usr/share/man/man1
-	cp doc/nbfc_service.1      $(DESTDIR)/usr/share/man/man1
-	cp doc/nbfc_service.json.5 $(DESTDIR)/usr/share/man/man5
+	# Documentation
+	mkdir -p $(DESTDIR)/usr/share/man/man1
+	mkdir -p $(DESTDIR)/usr/share/man/man5
+	cp doc/ec_probe.1            $(DESTDIR)/usr/share/man/man1
+	cp doc/nbfc.1                $(DESTDIR)/usr/share/man/man1
+	cp doc/nbfc_service.1        $(DESTDIR)/usr/share/man/man1
+	cp doc/nbfc_service.json.5   $(DESTDIR)/usr/share/man/man5
 	
 	# Completion
 	mkdir -p $(DESTDIR)/usr/share/zsh/site-functions
@@ -44,9 +42,9 @@ clean:
 	(cd src; make clean)
 
 clean_generated: clean
-	rm -rf ec_probe.md nbfc.md nbfc_service.md nbfc_service.json.md
-	rm -rf etc/nbfc/configs
-	rm -rf doc completion
+	rm -rf doc completion etc/nbfc/configs
+
+generated: doc completion etc/nbfc/configs .force
 
 # =============================================================================
 # Binaries ====================================================================
@@ -62,7 +60,7 @@ src/ec_probe:
 # Configs / XML->JSON Conversion ==============================================
 # =============================================================================
 
-etc/nbfc/configs:
+etc/nbfc/configs: .force
 	mkdir -p etc/nbfc/configs
 	[ -e nbfc ] || git clone https://github.com/hirschmann/nbfc
 	./tools/config_to_json.py nbfc/Configs/*
@@ -75,42 +73,37 @@ etc/nbfc/configs:
 completion: .force
 	mkdir -p completion/bash completion/fish completion/zsh
 	
-	./tools/argany/argany.py \
-		zsh  ./nbfc.py -o completion/zsh/_nbfc ';' \
-	  fish ./nbfc.py -o completion/fish/nbfc.fish ';' \
-	  bash ./nbfc.py -o completion/bash/nbfc ';' \
+	./tools/argany/argany.py\
+		zsh  ./nbfc.py -o completion/zsh/_nbfc      ';'\
+	  fish ./nbfc.py -o completion/fish/nbfc.fish ';'\
+	  bash ./nbfc.py -o completion/bash/nbfc      ';'\
 		\
-	  zsh  ./tools/argany/nbfc_service.py -o completion/zsh/_nbfc_service ';' \
-	  fish ./tools/argany/nbfc_service.py -o completion/fish/nbfc_service.fish ';' \
-	  bash ./tools/argany/nbfc_service.py -o completion/bash/nbfc_service ';' \
+	  zsh  ./tools/argany/nbfc_service.py -o completion/zsh/_nbfc_service      ';'\
+	  fish ./tools/argany/nbfc_service.py -o completion/fish/nbfc_service.fish ';'\
+	  bash ./tools/argany/nbfc_service.py -o completion/bash/nbfc_service      ';'\
 		\
-	  zsh  ./tools/argany/ec_probe.py -o completion/zsh/_ec_probe ';' \
-	  fish ./tools/argany/ec_probe.py -o completion/fish/ec_probe.fish ';' \
+	  zsh  ./tools/argany/ec_probe.py -o completion/zsh/_ec_probe      ';'\
+	  fish ./tools/argany/ec_probe.py -o completion/fish/ec_probe.fish ';'\
 	  bash ./tools/argany/ec_probe.py -o completion/bash/ec_probe
 
 # =============================================================================
-# Markdown ====================================================================
-# =============================================================================
-
-markdown: .force
-	./tools/argany/argany.py \
-		markdown ./tools/ec_probe.py     -o ec_probe.md ';' \
-	  markdown ./tools/nbfc_service.py -o nbfc_service.md ';' \
-	  markdown nbfc.py -o nbfc.md
-
-nbfc_service.json.md: ./tools/config_to_md.py ./tools/config.json
-	./tools/config_to_md.py  > nbfc_service.json.md
-
-# =============================================================================
-# Manual pages ================================================================
+# Documentation ===============================================================
 # =============================================================================
 
 doc: .force
 	mkdir -p doc
-	go-md2man < ec_probe.md > doc/ec_probe.1
-	go-md2man < nbfc.md > doc/nbfc.1
-	go-md2man < nbfc_service.json.md > doc/nbfc_service.json.5
-	go-md2man < nbfc_service.md > doc/nbfc_service.1
+	
+	./tools/argany/argany.py \
+		markdown ./tools/ec_probe.py     -o doc/ec_probe.md     ';' \
+	  markdown ./tools/nbfc_service.py -o doc/nbfc_service.md ';' \
+	  markdown nbfc.py                 -o doc/nbfc.md
+	
+	./tools/config_to_md.py  > doc/nbfc_service.json.md
+	
+	go-md2man < doc/ec_probe.md          > doc/ec_probe.1
+	go-md2man < doc/nbfc.md              > doc/nbfc.1
+	go-md2man < doc/nbfc_service.md      > doc/nbfc_service.1
+	go-md2man < doc/nbfc_service.json.md > doc/nbfc_service.json.5
 
 .force:
 	# force building targets

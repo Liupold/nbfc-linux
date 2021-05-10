@@ -25,12 +25,19 @@ OPTIONS
   `-e, --embedded-controller EC [ec_linux, ec_sys_linux]`
     Specify embedded controller to use
 
+  ` [dump, read, write, monitor]`
+    None
+
 
 COMMANDS
 ---------
 
 dump, read, write, monitor
 
+DESCRIPTION
+-----------
+
+Dump all EC registers
 
 SYNOPSIS
 --------
@@ -45,6 +52,10 @@ OPTIONS
 
 
 
+DESCRIPTION
+-----------
+
+Read a byte from a EC register
 
 SYNOPSIS
 --------
@@ -62,6 +73,10 @@ OPTIONS
 
 
 
+DESCRIPTION
+-----------
+
+Write a byte to a EC register
 
 SYNOPSIS
 --------
@@ -82,6 +97,10 @@ OPTIONS
 
 
 
+DESCRIPTION
+-----------
+
+Monitor all EC registers for changes
 
 SYNOPSIS
 --------
@@ -113,39 +132,3 @@ OPTIONS
 
 All input values are interpreted as decimal numbers by default.
 Hexadecimal values may be entered by prefixing them with "0x".
-
-FILES
------
-
-*/var/run/nbfc_service.pid*
-  File containing the PID of current running nbfc\_service.
-
-*/var/run/nbfc_service.state.json*
-  State file of nbfc\_service. Updated every *EcPollInterval* miliseconds See nbfc\_service.json(5) for further details.
-
-*/etc/nbfc/configs/\*.json*
-  Configuration files for various notebook models. See nbfc\_service.json(5) for further details.
-
-EXIT STATUS
------------
-
-   - 0    Everything fine
-   - 1    Generic error
-   - 2    Command line error
-   - 3    Initialization error
-   - 5    Fatal error
-
-BUGS
-----
-
-Bugs to https://github.com/braph/nbfc-linux
-
-AUTHOR
-------
-
-Benjamin Abendroth (braph93@gmx.de)
-
-SEE ALSO
---------
-
-nbfc(1), nbfc\_service(1), nbfc\_service.json(5), fancontrol(1)

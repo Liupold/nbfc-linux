@@ -21,9 +21,17 @@ Probing tool for embedded controllers
 \fB\fC\-e, \-\-embedded\-controller EC [ec\_linux, ec\_sys\_linux]\fR
     Specify embedded controller to use
 
+.PP
+\fB\fC[dump, read, write, monitor]\fR
+    None
+
 .SH COMMANDS
 .PP
 dump, read, write, monitor
+
+.SH DESCRIPTION
+.PP
+Dump all EC registers
 
 .SH SYNOPSIS
 .PP
@@ -33,6 +41,10 @@ dump, read, write, monitor
 .PP
 \fB\fC\-h, \-\-help\fR
     show this help message and exit
+
+.SH DESCRIPTION
+.PP
+Read a byte from a EC register
 
 .SH SYNOPSIS
 .PP
@@ -46,6 +58,10 @@ dump, read, write, monitor
 .PP
 \fB\fCREGISTER [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ...]\fR
     Register source
+
+.SH DESCRIPTION
+.PP
+Write a byte to a EC register
 
 .SH SYNOPSIS
 .PP
@@ -63,6 +79,10 @@ dump, read, write, monitor
 .PP
 \fB\fCVALUE [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ...]\fR
     Value to write
+
+.SH DESCRIPTION
+.PP
+Monitor all EC registers for changes
 
 .SH SYNOPSIS
 .PP
@@ -96,43 +116,3 @@ dump, read, write, monitor
 .PP
 All input values are interpreted as decimal numbers by default.
 Hexadecimal values may be entered by prefixing them with "0x".
-
-.SH FILES
-.PP
-\fI/var/run/nbfc\_service.pid\fP
-  File containing the PID of current running nbfc\_service.
-
-.PP
-\fI/var/run/nbfc\_service.state.json\fP
-  State file of nbfc\_service. Updated every \fIEcPollInterval\fP miliseconds See nbfc\_service.json(5) for further details.
-
-.PP
-\fI/etc/nbfc/configs/*\&.json\fP
-  Configuration files for various notebook models. See nbfc\_service.json(5) for further details.
-
-.SH EXIT STATUS
-.RS
-.IP \(bu 2
-0    Everything fine
-.IP \(bu 2
-1    Generic error
-.IP \(bu 2
-2    Command line error
-.IP \(bu 2
-3    Initialization error
-.IP \(bu 2
-5    Fatal error
-
-.RE
-
-.SH BUGS
-.PP
-Bugs to https://github.com/braph/nbfc\-linux
-
-.SH AUTHOR
-.PP
-Benjamin Abendroth (braph93@gmx.de)
-
-.SH SEE ALSO
-.PP
-nbfc(1), nbfc\_service(1), nbfc\_service.json(5), fancontrol(1)

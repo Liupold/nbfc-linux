@@ -19,8 +19,8 @@ Comparison of NBFC C# and NBFC Linux
 |IPC Concept                      | TCP/IP                                | Files                                       |
 |IPC Protocol                     | Binary                                | JSON                                        |
 
-The [service](nbfc_service.md) and the [probing tool](ec_probe.md) are written in C.
-The [client](nbfc.md) is written in Python.
+The [service](doc/nbfc_service.md) and the [probing tool](doc/ec_probe.md) are written in C.
+The [client](doc/nbfc.md) is written in Python.
 
 Installation
 ------------
@@ -35,7 +35,7 @@ Installation
 Getting started
 ---------------
 
-When running nbfc for the first time, you need to give it a configuration file for your laptop model.
+When running NBFC for the first time, you need to give it a configuration file for your laptop model.
 
 If you are lucky, `sudo nbfc config --set auto` will find a matching one and set it.
 
@@ -63,14 +63,11 @@ Differences en detail
 |State file                       | -                                     | /run/nbfc\_service.state.json               |
 |Config file                      | ?                                     | /etc/nbfc/nbfc.json                         |
 
-- The original NBFC service is queried and controlled by the client using TCP/IP.
-- NBFC Linux does not implement any "real" IPC. Information about the service can be queried by reading its state file. The client controls the service by simply rewriting its configuration file and reloading it.
+- The original NBFC service is queried and controlled by the client using TCP/IP. - NBFC Linux does not implement any "real" IPC. Information about the service can be queried by reading its state file. The client controls the service by simply rewriting its configuration file and reloading it.
 
-- The original NBFC service adjusts the fan speeds in intervals of `EcPollIntervall` according to `TemperatureThresholds`.
-- NBFC Linux directly sets the fan speed (also according to `TemperatureThresholds`).
+- The original NBFC service adjusts the fan speeds in intervals of `EcPollIntervall` according to `TemperatureThresholds`. - NBFC Linux directly sets the fan speed (also according to `TemperatureThresholds`).
 
-- The original NBFC service provided an `Autostart` option.
-- NBFC Linux dropped that option, it relies on the systemd service file only.
+- The original NBFC service provided an `Autostart` option. - NBFC Linux dropped that option, it relies on the systemd service file only.
 
 Shell autocompletion
 --------------------
@@ -97,5 +94,5 @@ status   -- Show the service status
 stop     -- Stop the service
 ```
 
-See also the documentation about the [nbfc configuration](nbfc_service.json.md).
+See also the documentation about the [nbfc configuration](doc/nbfc_service.json.md).
 

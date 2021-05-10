@@ -17,9 +17,17 @@ NoteBook FanControl CLI Client
 \fB\fC\-h, \-\-help\fR
     show this help message and exit
 
+.PP
+\fB\fC[start, stop, restart, status, config, set, help]\fR
+    None
+
 .SH COMMANDS
 .PP
 start, stop, restart, status, config, set, help
+
+.SH DESCRIPTION
+.PP
+Start the service
 
 .SH SYNOPSIS
 .PP
@@ -38,6 +46,10 @@ start, stop, restart, status, config, set, help
 \fB\fC\-r, \-\-readonly\fR
     Start in read\-only mode
 
+.SH DESCRIPTION
+.PP
+Stop the service
+
 .SH SYNOPSIS
 .PP
 \fB\fCstop\fR [OPTIONS]
@@ -46,6 +58,10 @@ start, stop, restart, status, config, set, help
 .PP
 \fB\fC\-h, \-\-help\fR
     show this help message and exit
+
+.SH DESCRIPTION
+.PP
+Restart the service
 
 .SH SYNOPSIS
 .PP
@@ -63,6 +79,10 @@ start, stop, restart, status, config, set, help
 .PP
 \fB\fC\-r, \-\-readonly\fR
     Restart in read\-only mode
+
+.SH DESCRIPTION
+.PP
+Show the service status
 
 .SH SYNOPSIS
 .PP
@@ -89,6 +109,10 @@ start, stop, restart, status, config, set, help
 \fB\fC\-w, \-\-watch SECONDS\fR
     Show status periodically
 
+.SH DESCRIPTION
+.PP
+List or apply configs
+
 .SH SYNOPSIS
 .PP
 \fB\fCconfig\fR [OPTIONS]
@@ -114,6 +138,10 @@ start, stop, restart, status, config, set, help
 \fB\fC\-r, \-\-recommend\fR
     List configs which may work for your device
 
+.SH DESCRIPTION
+.PP
+Control fan speed
+
 .SH SYNOPSIS
 .PP
 \fB\fCset\fR [OPTIONS]
@@ -134,6 +162,10 @@ start, stop, restart, status, config, set, help
 .PP
 \fB\fC\-f, \-\-fan FAN INDEX\fR
     Fan index (zero based)
+
+.SH DESCRIPTION
+.PP
+Show help
 
 .SH SYNOPSIS
 .PP

@@ -22,12 +22,19 @@ OPTIONS
   `-h, --help`
     show this help message and exit
 
+  ` [start, stop, restart, status, config, set, help]`
+    None
+
 
 COMMANDS
 ---------
 
 start, stop, restart, status, config, set, help
 
+DESCRIPTION
+-----------
+
+Start the service
 
 SYNOPSIS
 --------
@@ -48,6 +55,10 @@ OPTIONS
 
 
 
+DESCRIPTION
+-----------
+
+Stop the service
 
 SYNOPSIS
 --------
@@ -62,6 +73,10 @@ OPTIONS
 
 
 
+DESCRIPTION
+-----------
+
+Restart the service
 
 SYNOPSIS
 --------
@@ -82,6 +97,10 @@ OPTIONS
 
 
 
+DESCRIPTION
+-----------
+
+Show the service status
 
 SYNOPSIS
 --------
@@ -108,6 +127,10 @@ OPTIONS
 
 
 
+DESCRIPTION
+-----------
+
+List or apply configs
 
 SYNOPSIS
 --------
@@ -134,6 +157,10 @@ OPTIONS
 
 
 
+DESCRIPTION
+-----------
+
+Control fan speed
 
 SYNOPSIS
 --------
@@ -157,6 +184,10 @@ OPTIONS
 
 
 
+DESCRIPTION
+-----------
+
+Show help
 
 SYNOPSIS
 --------
