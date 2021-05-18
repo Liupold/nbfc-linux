@@ -37,7 +37,7 @@ def parse_opts():
 
     for opt in ('F', 'c', 'f', 'i', 'u', 'b', 's', 'o', 'command', 'pos1'):
         print('-'+opt, getattr(opts, opt) if hasattr(opts, opt) else '')
-    
+
 
 parse_opts()
 

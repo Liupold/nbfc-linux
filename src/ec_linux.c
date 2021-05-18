@@ -151,7 +151,7 @@ static bool EC_Linux_TryWriteByte(int register_, uint8_t value)
 static bool EC_Linux_TryReadWord(int register_, uint16_t* value)
 {
   // Byte order: little endian
- 
+
   uint8_t result[2];
 
   if (EC_Linux_TryReadByte(register_+0, &result[0]) &&

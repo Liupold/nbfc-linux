@@ -177,7 +177,7 @@ OPTIONS
     Set fan speed to 'auto'
 
   `-s, --speed PERCENT`
-    Set fan speed to <value>
+    Set fan speed to PERCENT
 
   `-f, --fan FAN INDEX`
     Fan index (zero based)

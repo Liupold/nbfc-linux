@@ -234,7 +234,7 @@ cmdp.set_defaults(cmd=config)
 cmdp = subp.add_parser('set',                  help='Control fan speed')
 agrp = cmdp.add_mutually_exclusive_group(required=True)
 agrp.add_argument('-a', '--auto',              help='Set fan speed to \'auto\'', action='store_const', dest='speed', const=-1)
-agrp.add_argument('-s', '--speed', type=float, help='Set fan speed to <value>', dest='speed', metavar='PERCENT')
+agrp.add_argument('-s', '--speed', type=float, help='Set fan speed to PERCENT', dest='speed', metavar='PERCENT')
 cmdp.add_argument('-f', '--fan',   type=int,   help='Fan index (zero based)',   metavar='FAN INDEX', default=0)
 cmdp.set_defaults(cmd=set, speed=-1)
 

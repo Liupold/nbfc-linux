@@ -1,3 +1,6 @@
+release: nbfc_service ec_probe
+debug:   nbfc_service-debug ec_probe-debug
+
 nbfc_service-debug: \
 	build.c \
 	config.c config.h \
@@ -74,22 +77,13 @@ ec_probe: \
 	optparse/optparse.h optparse/optparse.c
 	$(CC) $(CFLAGS) -Wall -Wextra -Os -DNDEBUG -s ec_probe.c -lm -o ec_probe
 
-release: nbfc_service ec_probe
-
-generated/:
+generated/: .force
 	mkdir -p generated
-
-generated/config.generated.c: generated/ ../tools/config.py ../tools/config.json
 	../tools/config.py source > generated/config.generated.c
-
-generated/config.generated.h: generated/ ../tools/config.py ../tools/config.json
 	../tools/config.py header > generated/config.generated.h
-
-generated/nbfc_service.help.h: generated/ ../tools/argany/argany.py ../tools/argany/nbfc_service.py
-	../tools/argany/argany.py printf ../tools/argany/nbfc_service.py > generated/nbfc_service.help.h
-
-generated/ec_probe.help.h: generated/ ../tools/argany/argany.py ../tools/argany/ec_probe.py
-	../tools/argany/argany.py printf ../tools/argany/ec_probe.py > generated/ec_probe.help.h
+	../tools/argany/argany.py \
+		printf ../tools/argany/nbfc_service.py -o generated/nbfc_service.help.h ';'\
+		printf ../tools/argany/ec_probe.py     -o generated/ec_probe.help.h
 
 clean:
 	rm -f nbfc_service ec_probe nbfc_service-debug ec_probe-debug a.out
@@ -98,5 +92,8 @@ clean:
 
 clean_generated: clean
 	rm -rf generated
+
+.force:
+	# Force building targets
 
 #	git clone https://github.com/thestr4ng3r/nxjson

@@ -16,8 +16,7 @@
  "    write               Write a byte to a EC register\n"\
  "    monitor             Monitor all EC registers for changes\n"\
  "\n"\
- "All input values are interpreted as decimal numbers by default. Hexadecimal\n"\
- "values may be entered by prefixing them with \"0x\".\n"\
+ "All input values are interpreted as decimal numbers by default. Hexadecimal values may be entered by prefixing them with \"0x\".\n"\
  ""
 #define EC_PROBE_DUMP_HELP_TEXT "usage: %s [-h]\n"\
  "\n"\
@@ -63,8 +62,6 @@
  "  -r REPORT, --report REPORT\n"\
  "                        Save all readings as a CSV file\n"\
  "  -c, --clearly         Blanks out consecutive duplicate readings\n"\
- "  -d, --decimal         Output readings in decimal format instead of\n"\
- "                        hexadecimal format\n"\
+ "  -d, --decimal         Output readings in decimal format instead of hexadecimal format\n"\
  ""
-
 

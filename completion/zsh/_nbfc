@@ -72,7 +72,7 @@ _nbfc_set() {
   _arguments \
     '(--help -h)'{--help,-h}'[show this help message and exit]'::'()'\
     '(--auto --speed -a -s)'{--auto,-a}"[Set fan speed to 'auto']"::'()'\
-    '(--auto --speed -a -s)'{--speed=,-s+}'[Set fan speed to <value>]':PERCENT:'()'\
+    '(--auto --speed -a -s)'{--speed=,-s+}'[Set fan speed to PERCENT]':PERCENT:'()'\
     '(--fan -f)'{--fan=,-f+}'[Fan index (zero based)]':'FAN INDEX':'()'
 }
 

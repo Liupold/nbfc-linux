@@ -26,6 +26,6 @@ complete -c nbfc -n 'not __fish_contains_opt list recommend set -s l -s r -s s' 
 complete -c nbfc -n 'not __fish_contains_opt apply list set -s a -s l -s s' -n '__fish_seen_subcommand_from config' -s r -l recommend -d 'List configs which may work for your device'
 complete -c nbfc -n '__fish_seen_subcommand_from set' -s h -l help -d 'show this help message and exit'
 complete -c nbfc -n 'not __fish_contains_opt speed -s s' -n '__fish_seen_subcommand_from set' -s a -l auto -d "Set fan speed to 'auto'"
-complete -c nbfc -n 'not __fish_contains_opt auto -s a' -n '__fish_seen_subcommand_from set' -s s -l speed -d 'Set fan speed to <value>' -r
+complete -c nbfc -n 'not __fish_contains_opt auto -s a' -n '__fish_seen_subcommand_from set' -s s -l speed -d 'Set fan speed to PERCENT' -r
 complete -c nbfc -n '__fish_seen_subcommand_from set' -s f -l fan -d 'Fan index (zero based)' -r
 complete -c nbfc -n '__fish_seen_subcommand_from help' -s h -l help -d 'show this help message and exit'
