@@ -91,6 +91,7 @@ static const cli99_option main_options[] = {
   {"-v|--verbose",             -'v',  0},
   {"-e|--embedded-controller", -'e',  1},
   {"-h|--help",                -'h',  0},
+  {"--version",                -'V',  0},
   {"command",                   'C',  1|cli99_required_option},
   cli99_options_end()
 };
@@ -191,18 +192,19 @@ int main(int argc, char* const argv[]) {
       }
       cli99_SetOptions(&p, Options[cmd], false);
       break;
-    case  'R':  options.register_= p.optval.u;        break;
-    case  'V':  options.value    = p.optval.u;        break;
-    case -'h':  printf(HelpTexts[cmd], argv[0]);      return 0;
-    case -'c':  options.clearly  = 1;                 break;
-    case -'d':  options.decimal  = 1;                 break;
-    case -'v':  options.verbose  = 1;                 break;
-    case -'e':  if (!strcmp("ec_sys_linux", p.optarg))    ec = &EC_SysLinux_VTable;
-                else if (!strcmp("ec_linux", p.optarg))   ec = &EC_Linux_VTable;
+    case  'R':  options.register_= p.optval.u;           break;
+    case  'V':  options.value    = p.optval.u;           break;
+    case -'h':  printf(HelpTexts[cmd], argv[0]);         return 0;
+    case -'V':  printf("ec_probe " NBFC_VERSION "\n");   return 0;
+    case -'c':  options.clearly  = 1;                    break;
+    case -'d':  options.decimal  = 1;                    break;
+    case -'v':  options.verbose  = 1;                    break;
+    case -'e':  if (!strcmp("ec_sys_linux", p.optarg))   ec = &EC_SysLinux_VTable;
+                else if (!strcmp("ec_linux", p.optarg))  ec = &EC_Linux_VTable;
                 else die(NBFC_EXIT_CMDLINE, "Invalid value: %s\n", p.optarg);
                 break;
-    case -'r':  options.report   = p.optarg;          break;
-    case -'t':  options.timespan = p.optval.i * 1000; break;
+    case -'r':  options.report   = p.optarg;             break;
+    case -'t':  options.timespan = p.optval.i * 1000;    break;
     case -'i':  options.interval = p.optval.i * 1000;
                 if (! options.interval)
                   die(NBFC_EXIT_CMDLINE, "%s: %s\n", argv[0], "--interval == 0");

@@ -27,6 +27,7 @@ static cli99_option cli_options[] = {
 #define G1 cli99_exclusive_group(1) // readonly <or> fork
 #define G2 cli99_exclusive_group(2) // debug    <or> fork
   {"-h|--help",                'h',  0},
+  {"-v|--version",             'v',  0},
   {"-e|--embedded-controller", 'e',  1},
   {"-r|--readonly",            'r',  0},
   {"-f|--fork",                'f',  0},
@@ -55,6 +56,7 @@ static void parse_opts(int argc, char* const argv[]) {
         exit(NBFC_EXIT_CMDLINE);
       }
       break;
+    case 'v':  printf("nbfc-linux " NBFC_VERSION "\n"); exit(0);   break;
     case 'h':  printf(NBFC_SERVICE_HELP_TEXT, argv[0]); exit(0);   break;
     case 'r':  options.read_only      = 1;                         break;
     case 'f':  options.fork           = 1;                         break;

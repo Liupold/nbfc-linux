@@ -10,7 +10,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define NBFC_MAX_FILE_SIZE               32768 /*=32KB*/
+#define NBFC_VERSION                     "0.1.0"
+#define NBFC_MAX_FILE_SIZE               32768
 #define NBFC_TEMPERATURE_FILTER_TIMESPAN 6000  /*ms*/
 #define NBFC_CONFIG_DIR                  "/etc/nbfc"
 #define NBFC_CONFIGS_DIR                 "/etc/nbfc/configs"
