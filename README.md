@@ -39,7 +39,7 @@ When running NBFC for the first time, you need to give it a configuration file f
 
 If you are lucky, `sudo nbfc config --set auto` will find a matching one and set it.
 
-`sudo nbfc config --recommend` will give a list of configuration files that may match your laptop.
+`sudo nbfc config --recommend` (required `dmidecode`) will give a list of configuration files that may match your laptop.
 
 With `sudo nbfc config --set <MODEL>` a configuration is selected.
 
